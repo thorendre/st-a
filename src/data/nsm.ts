@@ -43,8 +43,8 @@ export const nsmControls: RegulationControl[] = [
     {
         id: 'NSM-1.2',
         domain: '1. Identifisere og kartlegge',
-        title: '⭐ Kartlegge enheter og programvare (NSM 1.2 – Prioritetsgruppe 1)',
-        titleNo: '⭐ Kartlegge enheter og programvare (NSM 1.2 – Prioritetsgruppe 1)',
+        title: 'Kartlegge enheter og programvare (NSM 1.2)',
+        titleNo: 'Kartlegge enheter og programvare (NSM 1.2)',
         description: 'Ha fullstendig og automatisert oversikt over alle fysiske og virtuelle enheter samt all installert programvare, containere og skytjenester i virksomheten (Tiltak 1.2.3 og 1.2.4).',
         descriptionNo: 'Ha fullstendig og automatisert oversikt over alle fysiske og virtuelle enheter samt all installert programvare, containere og skytjenester i virksomheten (Tiltak 1.2.3 og 1.2.4).',
         guidance: [
@@ -71,8 +71,8 @@ export const nsmControls: RegulationControl[] = [
     {
         id: 'NSM-1.3',
         domain: '1. Identifisere og kartlegge',
-        title: '⭐ Kartlegge brukere og tilgangsbehov (NSM 1.3 – Prioritetsgruppe 1)',
-        titleNo: '⭐ Kartlegge brukere og tilgangsbehov (NSM 1.3 – Prioritetsgruppe 1)',
+        title: 'Kartlegge brukere og tilgangsbehov (NSM 1.3)',
+        titleNo: 'Kartlegge brukere og tilgangsbehov (NSM 1.3)',
         description: 'Kartlegge alle brukerkontoer, tjenestekontoer og tilgangsrettigheter, og sikre at tilganger er strengt basert på tjenstlig behov (Tiltak 1.3.1).',
         descriptionNo: 'Kartlegge alle brukerkontoer, tjenestekontoer og tilgangsrettigheter, og sikre at tilganger er strengt basert på tjenstlig behov (Tiltak 1.3.1).',
         guidance: [
@@ -97,8 +97,8 @@ export const nsmControls: RegulationControl[] = [
     {
         id: 'NSM-2.1',
         domain: '2. Beskytte og opprettholde',
-        title: '⭐ Sikkerhet i anskaffelser og utvikling (NSM 2.1 – Prioritetsgruppe 1)',
-        titleNo: '⭐ Sikkerhet i anskaffelser og utvikling (NSM 2.1 – Prioritetsgruppe 1)',
+        title: 'Sikkerhet i anskaffelser og utvikling (NSM 2.1)',
+        titleNo: 'Sikkerhet i anskaffelser og utvikling (NSM 2.1)',
         description: 'Inkludere eksplisitte sikkerhetskrav ved anskaffelser og etablere sikker programvareutvikling med sikre byggemiljøer (Tiltak 2.1.2 og 2.1.9).',
         descriptionNo: 'Inkludere eksplisitte sikkerhetskrav ved anskaffelser og etablere sikker programvareutvikling med sikre byggemiljøer (Tiltak 2.1.2 og 2.1.9).',
         guidance: [
@@ -125,8 +125,8 @@ export const nsmControls: RegulationControl[] = [
     {
         id: 'NSM-2.2',
         domain: '2. Beskytte og opprettholde',
-        title: '⭐ Sikker design og nettverkssegmentering (NSM 2.2 – Prioritetsgruppe 1)',
-        titleNo: '⭐ Sikker design og nettverkssegmentering (NSM 2.2 – Prioritetsgruppe 1)',
+        title: 'Sikker design og nettverkssegmentering (NSM 2.2)',
+        titleNo: 'Sikker design og nettverkssegmentering (NSM 2.2)',
         description: 'Dele IKT-miljøet inn i adskilte sikkerhetssoner og mikrosegmenter basert på verdi og risiko, med streng trafikkontroll (Tiltak 2.2.3).',
         descriptionNo: 'Dele IKT-miljøet inn i adskilte sikkerhetssoner og mikrosegmenter basert på verdi og risiko, med streng trafikkontroll (Tiltak 2.2.3).',
         guidance: [
@@ -147,8 +147,8 @@ export const nsmControls: RegulationControl[] = [
     {
         id: 'NSM-2.3',
         domain: '2. Beskytte og opprettholde',
-        title: '⭐ Sikker konfigurasjon og herding (NSM 2.3 – Prioritetsgruppe 1)',
-        titleNo: '⭐ Sikker konfigurasjon og herding (NSM 2.3 – Prioritetsgruppe 1)',
+        title: 'Sikker konfigurasjon og herding (NSM 2.3)',
+        titleNo: 'Sikker konfigurasjon og herding (NSM 2.3)',
         description: 'Etablere sentralisert patching, sikker grunnkonfigurasjon (CIS benchmarks), fjerning av unødvendige tjenester og obligatorisk MFA (Tiltak 2.3.1, 2.3.2, 2.3.3 og 2.3.7).',
         descriptionNo: 'Etablere sentralisert patching, sikker grunnkonfigurasjon, fjerning av unødvendige tjenester og obligatorisk MFA (Tiltak 2.3.1, 2.3.2, 2.3.3 og 2.3.7).',
         guidance: [
@@ -219,8 +219,8 @@ export const nsmControls: RegulationControl[] = [
     {
         id: 'NSM-2.6',
         domain: '2. Beskytte og opprettholde',
-        title: '⭐ Kontroll på administrative privilegier (NSM 2.6 – Prioritetsgruppe 1)',
-        titleNo: '⭐ Kontroll på administrative privilegier (NSM 2.6 – Prioritetsgruppe 1)',
+        title: 'Kontroll på administrative privilegier (NSM 2.6)',
+        titleNo: 'Kontroll på administrative privilegier (NSM 2.6)',
         description: 'Begrense tildeling av administratorrettigheter til et minimum, kreve separate admin-kontoer og bruke tidsbegrenset tilgang (Tiltak 2.6.1 og 2.6.4).',
         descriptionNo: 'Begrense tildeling av administratorrettigheter til et minimum, kreve separate admin-kontoer og bruke tidsbegrenset tilgang (Tiltak 2.6.1 og 2.6.4).',
         guidance: [
@@ -269,8 +269,8 @@ export const nsmControls: RegulationControl[] = [
     {
         id: 'NSM-2.8',
         domain: '2. Beskytte og opprettholde',
-        title: '⭐ Beskytte data i ro og i transitt (NSM 2.8 – Prioritetsgruppe 1)',
-        titleNo: '⭐ Beskytte data i ro og i transitt (NSM 2.8 – Prioritetsgruppe 1)',
+        title: 'Beskytte data i ro og i transitt (NSM 2.8)',
+        titleNo: 'Beskytte data i ro og i transitt (NSM 2.8)',
         description: 'Beskytte konfidensialitet og integritet for sensitive data ved bruk av robust kryptering under overføring og lagring (Tiltak 2.8.1).',
         descriptionNo: 'Beskytte konfidensialitet og integritet for sensitive data ved bruk av robust kryptering under overføring og lagring (Tiltak 2.8.1).',
         guidance: [
@@ -291,8 +291,8 @@ export const nsmControls: RegulationControl[] = [
     {
         id: 'NSM-2.9',
         domain: '2. Beskytte og opprettholde',
-        title: '⭐ Beskytte e-post, web og nettleser (NSM 2.9 – Prioritetsgruppe 1)',
-        titleNo: '⭐ Beskytte e-post, web og nettleser (NSM 2.9 – Prioritetsgruppe 1)',
+        title: 'Beskytte e-post, web og nettleser (NSM 2.9)',
+        titleNo: 'Beskytte e-post, web og nettleser (NSM 2.9)',
         description: 'Etablere sterke beskyttelsesmekanismer mot phishing, ondsinnet kode og svindel via e-post, nettlesere og web (Tiltak 2.9.1).',
         descriptionNo: 'Etablere sterke beskyttelsesmekanismer mot phishing, ondsinnet kode og svindel via e-post, nettlesere og web (Tiltak 2.9.1).',
         guidance: [
@@ -351,8 +351,8 @@ export const nsmControls: RegulationControl[] = [
     {
         id: 'NSM-3.1',
         domain: '3. Oppdage',
-        title: '⭐ Oppdage og fjerne sårbarheter (NSM 3.1 – Prioritetsgruppe 1)',
-        titleNo: '⭐ Oppdage og fjerne sårbarheter (NSM 3.1 – Prioritetsgruppe 1)',
+        title: 'Oppdage og fjerne sårbarheter (NSM 3.1)',
+        titleNo: 'Oppdage og fjerne sårbarheter (NSM 3.1)',
         description: 'Kontinuerlig identifisere, prioritere og utbedre kjente sårbarheter og trusler på systemer, endepunkter og applikasjoner (Tiltak 3.1.1).',
         descriptionNo: 'Kontinuerlig identifisere, prioritere og utbedre kjente sårbarheter og trusler på systemer, endepunkter og applikasjoner (Tiltak 3.1.1).',
         guidance: [
