@@ -7,6 +7,8 @@ import { defaultRiskCategories, riskBanks, RiskBank } from '../data/riskCategori
 import { allPlatformBaselines } from '../data/platformBaselines';
 import { iso27001Controls } from '../data/iso27001';
 import { nsmControls } from '../data/nsm';
+import { nistControls } from '../data/nist';
+import { soc2Controls } from '../data/soc2';
 import { nis2Controls } from '../data/nis2';
 import {
     Plus, Trash2, ChevronDown, ChevronRight, Edit3, Shield, AlertTriangle,
@@ -222,6 +224,8 @@ export function RiskPage() {
         return {
             isoPct: calcDone(iso27001Controls),
             nsmPct: calcDone(nsmControls),
+            nistPct: calcDone(nistControls),
+            soc2Pct: calcDone(soc2Controls),
             nis2Pct: calcDone(nis2Controls),
         };
     }, [state.assessments]);
@@ -404,7 +408,7 @@ export function RiskPage() {
                                     color: 'var(--text-secondary)',
                                     lineHeight: 1.4
                                 }}>
-                                    <strong style={{ color: 'var(--accent-teal)' }}>🛡️ Flerlags risikostyring:</strong> Plattformen ivaretar infrastruktur- og driftstiltak. <strong>ISO 27001, NIS2 og NSM Grunnprinsipper</strong> ivaretar virksomhetens baseline. Dette prosjektet fokuserer på <strong>systemspesifikk restrisiko</strong>.
+                                    <strong style={{ color: 'var(--accent-teal)' }}>🛡️ Flerlags risikostyring:</strong> Plattformen ivaretar infrastruktur- og driftstiltak. <strong>ISO 27001, NSM, NIST CSF, SOC 2 og NIS2</strong> ivaretar virksomhetens baseline. Dette prosjektet fokuserer på <strong>systemspesifikk restrisiko</strong>.
                                 </div>
                             </div>
 
@@ -606,6 +610,12 @@ export function RiskPage() {
                     </span>
                     <span className="status-badge" style={{ fontSize: '11px', padding: '3px 8px', background: 'rgba(13, 148, 136, 0.1)', color: '#0d9488', borderColor: 'rgba(13, 148, 136, 0.25)' }}>
                         NSM Grunnprinsipper: <strong>{baselineStats.nsmPct}%</strong>
+                    </span>
+                    <span className="status-badge" style={{ fontSize: '11px', padding: '3px 8px', background: 'rgba(37, 99, 235, 0.1)', color: '#2563eb', borderColor: 'rgba(37, 99, 235, 0.25)' }}>
+                        NIST CSF: <strong>{baselineStats.nistPct}%</strong>
+                    </span>
+                    <span className="status-badge" style={{ fontSize: '11px', padding: '3px 8px', background: 'rgba(124, 58, 237, 0.1)', color: '#7c3aed', borderColor: 'rgba(124, 58, 237, 0.25)' }}>
+                        SOC 2: <strong>{baselineStats.soc2Pct}%</strong>
                     </span>
                     <span className="status-badge" style={{ fontSize: '11px', padding: '3px 8px', background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', borderColor: 'rgba(168, 85, 247, 0.25)' }}>
                         NIS2: <strong>{baselineStats.nis2Pct}%</strong>

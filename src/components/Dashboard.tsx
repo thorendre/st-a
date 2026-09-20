@@ -4,6 +4,8 @@ import { iso27001Controls, isoDomains } from '../data/iso27001';
 import { doraControls } from '../data/dora';
 import { nis2Controls } from '../data/nis2';
 import { nsmControls } from '../data/nsm';
+import { nistControls } from '../data/nist';
+import { soc2Controls } from '../data/soc2';
 import { ismsDocuments } from '../data/ismsDocuments';
 import { useLang } from '../hooks/useLang';
 import { domainTranslations, getControlTranslation } from '../data/translations';
@@ -49,6 +51,8 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
     };
     const isoStats = useMemo(() => computeRegStats(iso27001Controls, state.assessments, isoGuidanceCount), [state.assessments, lang]);
     const nsmStats = useMemo(() => computeRegStats(nsmControls, state.assessments), [state.assessments]);
+    const nistStats = useMemo(() => computeRegStats(nistControls, state.assessments), [state.assessments]);
+    const soc2Stats = useMemo(() => computeRegStats(soc2Controls, state.assessments), [state.assessments]);
     const doraStats = useMemo(() => computeRegStats(doraControls, state.assessments), [state.assessments]);
     const nis2Stats = useMemo(() => computeRegStats(nis2Controls, state.assessments), [state.assessments]);
 
@@ -85,6 +89,8 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
             <div className="dashboard-reg-grid">
                 <RegCard label="ISO 27001" stats={isoStats} data={statusPieData(isoStats)} color="var(--accent-primary)" />
                 <RegCard label="NSM Grunnprinsipper" stats={nsmStats} data={statusPieData(nsmStats)} color="#0d9488" />
+                <RegCard label="NIST CSF 2.0" stats={nistStats} data={statusPieData(nistStats)} color="#2563eb" />
+                <RegCard label="SOC 2 Type II" stats={soc2Stats} data={statusPieData(soc2Stats)} color="#7c3aed" />
                 <RegCard label="DORA" stats={doraStats} data={statusPieData(doraStats)} color="var(--accent-teal)" />
                 <RegCard label="NIS2" stats={nis2Stats} data={statusPieData(nis2Stats)} color="var(--accent-burgundy)" />
             </div>
@@ -116,6 +122,8 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <GuidanceBar label="ISO 27001" done={isoStats.guideDone} total={isoStats.guideTotal} color="var(--accent-primary)" />
                         <GuidanceBar label="NSM Grunnprinsipper" done={nsmStats.guideDone} total={nsmStats.guideTotal} color="#0d9488" />
+                        <GuidanceBar label="NIST CSF 2.0" done={nistStats.guideDone} total={nistStats.guideTotal} color="#2563eb" />
+                        <GuidanceBar label="SOC 2 Type II" done={soc2Stats.guideDone} total={soc2Stats.guideTotal} color="#7c3aed" />
                         <GuidanceBar label="DORA" done={doraStats.guideDone} total={doraStats.guideTotal} color="var(--accent-teal)" />
                         <GuidanceBar label="NIS2" done={nis2Stats.guideDone} total={nis2Stats.guideTotal} color="var(--accent-burgundy)" />
                     </div>

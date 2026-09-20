@@ -31,7 +31,7 @@ export interface ControlAssessment {
     lastUpdated: string;
 }
 
-export type ModuleId = 'overview' | 'controls' | 'dora' | 'nis2' | 'nsm' | 'risk' | 'systems' | 'privacy' | 'documents' | 'about';
+export type ModuleId = 'overview' | 'controls' | 'nsm' | 'nist' | 'soc2' | 'dora' | 'nis2' | 'risk' | 'systems' | 'privacy' | 'documents' | 'about';
 export type ModuleConfig = Record<ModuleId, boolean>;
 
 export interface ProjectState {
