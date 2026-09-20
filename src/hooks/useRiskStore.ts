@@ -68,7 +68,7 @@ export function useRiskStore() {
 
     // ─── Project CRUD ───
 
-    const createProject = (name: string, description: string, importDefaults: boolean = true, systemId?: string) => {
+    const createProject = (name: string, description: string, importDefaults: boolean = true, systemId?: string, jiraEpicKey?: string, jiraEpicUrl?: string) => {
         const id = generateId();
         const now = new Date().toISOString();
         const categories: RiskCategory[] = importDefaults
@@ -82,7 +82,7 @@ export function useRiskStore() {
                 })),
             }))
             : [];
-        const project: RiskProject = { id, name, description, systemId, createdAt: now, updatedAt: now, categories };
+        const project: RiskProject = { id, name, description, systemId, jiraEpicKey, jiraEpicUrl, createdAt: now, updatedAt: now, categories };
         setStore(prev => ({
             ...prev,
             projects: [...prev.projects, project],
@@ -103,12 +103,64 @@ export function useRiskStore() {
         }));
     };
 
-    const updateProject = (id: string, updates: Partial<Pick<RiskProject, 'name' | 'description' | 'systemId'>>) => {
+    const updateProject = (id: string, updates: Partial<Pick<RiskProject, 'name' | 'description' | 'systemId' | 'jiraEpicKey' | 'jiraEpicUrl'>>) => {
         setStore(prev => ({
             ...prev,
             projects: prev.projects.map(p =>
                 p.id === id ? { ...p, ...updates, updatedAt: new Date().toISOString() } : p
             ),
+        }));
+    };
+
+    const syncWithJira = (projectId: string) => {
+        setStore(prev => ({
+            ...prev,
+            projects: prev.projects.map(p => {
+                if (p.id !== projectId) return p;
+                return {
+                    ...p,
+                    categories: p.categories.map(cat => ({
+                        ...cat,
+                        risks: cat.risks.map(r => {
+                            if (!r.jiraIssueKey) return r;
+                            const isDone = r.status === 'mitigated' || r.status === 'closed';
+                            return {
+                                ...r,
+                                jiraStatus: isDone ? 'DONE' : 'IN PROGRESS'
+                            };
+                        })
+                    }))
+                };
+            })
+        }));
+    };
+
+    const createJiraTaskForRisk = (projectId: string, categoryId: string, riskId: string, customKey?: string) => {
+        setStore(prev => ({
+            ...prev,
+            projects: prev.projects.map(p => {
+                if (p.id !== projectId) return p;
+                const epicPrefix = p.jiraEpicKey ? p.jiraEpicKey.split('-')[0] : 'SEC';
+                return {
+                    ...p,
+                    categories: p.categories.map(c => {
+                        if (c.id !== categoryId) return c;
+                        return {
+                            ...c,
+                            risks: c.risks.map(r => {
+                                if (r.id !== riskId) return r;
+                                const issueNumber = Math.floor(100 + Math.random() * 900);
+                                const issueKey = customKey || `${epicPrefix}-${issueNumber}`;
+                                return {
+                                    ...r,
+                                    jiraIssueKey: issueKey,
+                                    jiraStatus: r.status === 'mitigated' || r.status === 'closed' ? 'DONE' : 'IN PROGRESS'
+                                };
+                            })
+                        };
+                    })
+                };
+            })
         }));
     };
 
@@ -265,6 +317,8 @@ export function useRiskStore() {
         addRisksFromBank,
         getAllRisks,
         getRiskLevel,
+        syncWithJira,
+        createJiraTaskForRisk,
     };
 }
 

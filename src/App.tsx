@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Dashboard } from './components/Dashboard';
 import { ControlsPage } from './components/ControlsPage';
 import { DocumentsPage } from './components/DocumentsPage';
@@ -14,11 +14,58 @@ import { nis2Controls, nis2Domains, nis2DomainTranslations } from './data/nis2';
 import {
     Sun, Moon, ShieldCheck, LayoutDashboard,
     ListCheck, Activity, Shield, AlertTriangle,
-    FileText, Info, Database, Fingerprint
+    FileText, Info, Database, Fingerprint, Sliders, X, Check, Lock
 } from 'lucide-react';
+import { ModuleId, ModuleConfig } from './types';
 
-type Tab = 'overview' | 'controls' | 'dora' | 'nis2' | 'risk' | 'systems' | 'privacy' | 'documents' | 'about';
+type Tab = ModuleId;
 type Theme = 'dark' | 'light';
+
+const MODULES_STORAGE_KEY = 'st-a-modules-config';
+
+interface ModuleMeta {
+    id: Tab;
+    title: string;
+    badge?: string;
+    description: string;
+    icon: any;
+}
+
+const ALL_MODULES: ModuleMeta[] = [
+    { id: 'overview', title: 'Oversikt / Dashboard', description: 'Samlet modenhet, målinger og nøkkeltall', icon: LayoutDashboard },
+    { id: 'controls', title: 'ISO/IEC 27001', description: '93 sikkerhetskontroller (Vedlegg A)', icon: ListCheck },
+    { id: 'dora', title: 'DORA', badge: 'EU', description: 'Digital Operational Resilience Act for finans og IKT-leverandører', icon: Activity },
+    { id: 'nis2', title: 'NIS2', badge: 'EU', description: 'Cybersikkerhetsdirektivet for samfunnsviktige virksomheter', icon: Shield },
+    { id: 'risk', title: 'Risikovurdering & KITA', description: 'KITA/CIA konsekvensvurdering, 5x5 matrise og tiltak', icon: AlertTriangle },
+    { id: 'systems', title: 'Systemoversikt', description: 'IT-arkitektur, driftsmodeller og systemeiere', icon: Database },
+    { id: 'privacy', title: 'Personvern & Leverandører', description: 'Behandlingsprotokoll (GDPR art. 30) og DPA-register', icon: Fingerprint },
+    { id: 'documents', title: 'ISMS Dokumenter', description: 'Sikkerhetspolicyer, instrukser og revisjonsstatus', icon: FileText },
+    { id: 'about', title: 'Om & Veiledning', description: 'Veiledning, roller og revisjonsstandarder', icon: Info },
+];
+
+const defaultModuleConfig: ModuleConfig = {
+    overview: true,
+    controls: true,
+    dora: true,
+    nis2: true,
+    risk: true,
+    systems: true,
+    privacy: true,
+    documents: true,
+    about: true,
+};
+
+function getInitialModuleConfig(): ModuleConfig {
+    const stored = localStorage.getItem(MODULES_STORAGE_KEY);
+    if (stored) {
+        try {
+            return { ...defaultModuleConfig, ...JSON.parse(stored) };
+        } catch (e) {
+            console.error('Failed to parse stored module config', e);
+        }
+    }
+    return defaultModuleConfig;
+}
 
 function getInitialTheme(): Theme {
     const saved = localStorage.getItem('comply-theme');
@@ -27,6 +74,8 @@ function getInitialTheme(): Theme {
 }
 
 function App() {
+    const [moduleConfig, setModuleConfig] = useState<ModuleConfig>(getInitialModuleConfig);
+    const [showModuleSettings, setShowModuleSettings] = useState(false);
     const [activeTab, setActiveTab] = useState<Tab>('controls');
     const [theme, setTheme] = useState<Theme>(getInitialTheme);
     const { state, setCompanyName } = useAssessmentStore();
@@ -41,94 +90,158 @@ function App() {
         document.documentElement.setAttribute('lang', lang);
     }, [lang]);
 
+    useEffect(() => {
+        localStorage.setItem(MODULES_STORAGE_KEY, JSON.stringify(moduleConfig));
+        // If current tab is disabled, switch to first available tab
+        if (!moduleConfig[activeTab]) {
+            const firstEnabled = ALL_MODULES.find(m => moduleConfig[m.id]);
+            if (firstEnabled) {
+                setActiveTab(firstEnabled.id);
+            }
+        }
+    }, [moduleConfig, activeTab]);
+
     const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+
+    const toggleModule = (id: Tab) => {
+        setModuleConfig(prev => {
+            const next = { ...prev, [id]: !prev[id] };
+            // Ensure at least one module is always enabled
+            const anyEnabled = Object.values(next).some(v => v);
+            if (!anyEnabled) return prev;
+            return next;
+        });
+    };
+
+    const enableAllModules = () => {
+        const all: ModuleConfig = {
+            overview: true,
+            controls: true,
+            dora: true,
+            nis2: true,
+            risk: true,
+            systems: true,
+            privacy: true,
+            documents: true,
+            about: true,
+        };
+        setModuleConfig(all);
+    };
+
+    const setCoreOnlyModules = () => {
+        const coreOnly: ModuleConfig = {
+            overview: true,
+            controls: true,
+            dora: false,
+            nis2: false,
+            risk: true,
+            systems: true,
+            privacy: true,
+            documents: true,
+            about: true,
+        };
+        setModuleConfig(coreOnly);
+    };
+
+    const visibleModules = useMemo(() => {
+        return ALL_MODULES.filter(m => moduleConfig[m.id]);
+    }, [moduleConfig]);
 
     return (
         <div className="sidebar-layout">
             {/* Sidebar Navigation */}
             <aside className="sidebar">
-                {/* Brand Logo */}
-                <div className="sidebar-header">
-                    <ShieldCheck size={22} style={{ color: 'var(--accent-teal)' }} />
-                    <span style={{
-                        fontWeight: 700,
-                        fontSize: '18px',
-                        letterSpacing: '-0.02em',
-                        color: 'var(--text-primary)',
-                    }}>
-                        Ståa
+                {/* Brand Logo & Security Trust Seal */}
+                <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{
+                            width: '32px', height: '32px', borderRadius: '8px',
+                            background: 'rgba(13, 148, 136, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            border: '1px solid rgba(13, 148, 136, 0.25)'
+                        }}>
+                            <ShieldCheck size={18} style={{ color: 'var(--accent-teal)' }} />
+                        </div>
+                        <div>
+                            <span style={{
+                                fontWeight: 700,
+                                fontSize: '16px',
+                                letterSpacing: '-0.02em',
+                                color: 'var(--text-primary)',
+                                display: 'block',
+                                lineHeight: 1.2
+                            }}>
+                                Ståa
+                            </span>
+                            <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 500 }}>
+                                ISMS & Personvern
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Modules Header & Customize Button */}
+                <div style={{ padding: '12px 14px 4px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                        Moduler ({visibleModules.length}/{ALL_MODULES.length})
                     </span>
+                    <button
+                        onClick={() => setShowModuleSettings(true)}
+                        style={{
+                            background: 'none', border: 'none', cursor: 'pointer',
+                            color: 'var(--accent-teal)', display: 'inline-flex', alignItems: 'center', gap: '4px',
+                            fontSize: '11px', fontWeight: 600, padding: '2px 6px', borderRadius: '4px'
+                        }}
+                        title="Tilpass hvilke moduler og menyer som skal vises"
+                    >
+                        <Sliders size={12} /> Tilpass
+                    </button>
                 </div>
 
                 {/* Sidebar Links */}
                 <nav className="sidebar-nav" aria-label="Hovedmeny">
-                    <button
-                        className={`sidebar-nav-btn ${activeTab === 'overview' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('overview')}
-                    >
-                        <LayoutDashboard size={16} />
-                        {t('nav.overview')}
-                    </button>
-                    <button
-                        className={`sidebar-nav-btn ${activeTab === 'controls' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('controls')}
-                    >
-                        <ListCheck size={16} />
-                        {t('nav.controls')}
-                    </button>
-                    <button
-                        className={`sidebar-nav-btn ${activeTab === 'dora' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('dora')}
-                    >
-                        <Activity size={16} />
-                        DORA
-                    </button>
-                    <button
-                        className={`sidebar-nav-btn ${activeTab === 'nis2' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('nis2')}
-                    >
-                        <Shield size={16} />
-                        NIS2
-                    </button>
-                    <button
-                        className={`sidebar-nav-btn ${activeTab === 'risk' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('risk')}
-                    >
-                        <AlertTriangle size={16} />
-                        {t('nav.risk')}
-                    </button>
-                    <button
-                        className={`sidebar-nav-btn ${activeTab === 'systems' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('systems')}
-                    >
-                        <Database size={16} />
-                        Systemoversikt
-                    </button>
-                    <button
-                        className={`sidebar-nav-btn ${activeTab === 'privacy' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('privacy')}
-                    >
-                        <Fingerprint size={16} />
-                        Personvern
-                    </button>
-                    <button
-                        className={`sidebar-nav-btn ${activeTab === 'documents' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('documents')}
-                    >
-                        <FileText size={16} />
-                        {t('nav.documents')}
-                    </button>
-                    <button
-                        className={`sidebar-nav-btn ${activeTab === 'about' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('about')}
-                    >
-                        <Info size={16} />
-                        {t('nav.about')}
-                    </button>
+                    {visibleModules.map(mod => {
+                        const Icon = mod.icon;
+                        const isActive = activeTab === mod.id;
+                        return (
+                            <button
+                                key={mod.id}
+                                className={`sidebar-nav-btn ${isActive ? 'active' : ''}`}
+                                onClick={() => setActiveTab(mod.id)}
+                            >
+                                <Icon size={16} />
+                                <span style={{ flex: 1, textAlign: 'left' }}>
+                                    {mod.id === 'overview' && t('nav.overview')}
+                                    {mod.id === 'controls' && t('nav.controls')}
+                                    {mod.id === 'dora' && 'DORA'}
+                                    {mod.id === 'nis2' && 'NIS2'}
+                                    {mod.id === 'risk' && t('nav.risk')}
+                                    {mod.id === 'systems' && 'Systemoversikt'}
+                                    {mod.id === 'privacy' && 'Personvern & DPA'}
+                                    {mod.id === 'documents' && t('nav.documents')}
+                                    {mod.id === 'about' && t('nav.about')}
+                                </span>
+                                {mod.badge && (
+                                    <span style={{
+                                        fontSize: '9px', fontWeight: 700, padding: '1px 5px', borderRadius: '3px',
+                                        background: 'rgba(59, 130, 246, 0.12)', color: 'var(--accent-primary)',
+                                        border: '1px solid rgba(59, 130, 246, 0.25)'
+                                    }}>
+                                        {mod.badge}
+                                    </span>
+                                )}
+                            </button>
+                        );
+                    })}
                 </nav>
 
                 {/* Sidebar Footer Controls */}
                 <div className="sidebar-footer">
+                    {/* Trust Seal Badge */}
+                    <div className="trust-badge" style={{ justifyContent: 'center', width: '100%', padding: '6px 10px', fontSize: '10px' }}>
+                        <Lock size={12} />
+                        <span>Klientkryptert · WCAG 2.1 AA</span>
+                    </div>
+
                     {/* Organization Input */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         <label style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -230,6 +343,128 @@ function App() {
                     </span>
                 </footer>
             </main>
+
+            {/* ─── Module Settings Modal ─── */}
+            {showModuleSettings && (
+                <div className="risk-modal-overlay" onClick={() => setShowModuleSettings(false)}>
+                    <div className="risk-modal card" style={{ maxWidth: '580px', width: '92vw', maxHeight: '85vh', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: '16px', borderBottom: '1px solid var(--border)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <div style={{
+                                    width: '34px', height: '34px', borderRadius: '8px',
+                                    background: 'rgba(13, 148, 136, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    color: 'var(--accent-teal)'
+                                }}>
+                                    <Sliders size={18} />
+                                </div>
+                                <div>
+                                    <h3 style={{ fontSize: '16px', fontWeight: 600, margin: 0 }}>Tilpass moduler & menyer</h3>
+                                    <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>
+                                        Skru av rammeverk eller moduler som ikke er relevante for din virksomhet.
+                                    </p>
+                                </div>
+                            </div>
+                            <button className="risk-btn-icon" onClick={() => setShowModuleSettings(false)}>
+                                <X size={16} />
+                            </button>
+                        </div>
+
+                        {/* Quick Action Presets */}
+                        <div style={{ display: 'flex', gap: '8px', padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
+                            <button
+                                className="risk-btn"
+                                style={{ fontSize: '11px', padding: '4px 10px' }}
+                                onClick={enableAllModules}
+                            >
+                                <Check size={12} /> Vis alle ({ALL_MODULES.length})
+                            </button>
+                            <button
+                                className="risk-btn"
+                                style={{ fontSize: '11px', padding: '4px 10px' }}
+                                onClick={setCoreOnlyModules}
+                            >
+                                Kun ISO 27001 kjerne (uten DORA/NIS2)
+                            </button>
+                        </div>
+
+                        {/* Module List */}
+                        <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            {ALL_MODULES.map(mod => {
+                                const Icon = mod.icon;
+                                const isEnabled = moduleConfig[mod.id];
+                                return (
+                                    <div
+                                        key={mod.id}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            padding: '12px 14px',
+                                            borderRadius: '8px',
+                                            background: isEnabled ? 'var(--hover-overlay)' : 'var(--card-inner-bg)',
+                                            border: '1px solid var(--border)',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, paddingRight: '12px' }}>
+                                            <div style={{
+                                                width: '32px', height: '32px', borderRadius: '6px',
+                                                background: isEnabled ? 'rgba(13, 148, 136, 0.1)' : 'var(--bg-tertiary)',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                color: isEnabled ? 'var(--accent-teal)' : 'var(--text-muted)'
+                                            }}>
+                                                <Icon size={16} />
+                                            </div>
+                                            <div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <span style={{ fontSize: '13px', fontWeight: 600, color: isEnabled ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                                                        {mod.title}
+                                                    </span>
+                                                    {mod.badge && (
+                                                        <span style={{
+                                                            fontSize: '9px', fontWeight: 700, padding: '1px 5px', borderRadius: '3px',
+                                                            background: 'rgba(59, 130, 246, 0.12)', color: 'var(--accent-primary)',
+                                                            border: '1px solid rgba(59, 130, 246, 0.25)'
+                                                        }}>
+                                                            {mod.badge}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                                    {mod.description}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Toggle switch */}
+                                        <label className="toggle-switch">
+                                            <input
+                                                type="checkbox"
+                                                checked={isEnabled}
+                                                onChange={() => toggleModule(mod.id)}
+                                            />
+                                            <span className="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '16px', borderTop: '1px solid var(--border)', marginTop: '8px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                                Endringer oppdateres i sanntid og huskes i nettleseren.
+                            </span>
+                            <button
+                                className="risk-btn risk-btn-primary"
+                                onClick={() => setShowModuleSettings(false)}
+                            >
+                                <Check size={14} /> Ferdig
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

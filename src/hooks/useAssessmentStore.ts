@@ -1,14 +1,75 @@
 import { useState, useEffect } from 'react';
-import { ProjectState, ControlAssessment, ImplementationStatus, ITSystem, PersonvernVurdering } from '../types';
+import { ProjectState, ControlAssessment, ImplementationStatus, ITSystem, PersonvernVurdering, Vendor } from '../types';
 
 const STORAGE_KEY = 'infosec_dashboard_state';
+
+const defaultVendors: Vendor[] = [
+    {
+        id: 'v-1',
+        name: 'Microsoft Ireland Operations Limited',
+        orgNumber: 'IE 9999999',
+        contactPerson: 'Microsoft Security & Privacy Team',
+        contactEmail: 'privacy@microsoft.com',
+        servicesDelivered: 'Microsoft 365, Azure Cloud Services, Entra ID',
+        dpaStatus: 'Signert',
+        dpaLink: 'https://www.microsoft.com/licensing/docs/view/Data-Protection-Addendum-DPA',
+        dpaSignDate: '2024-01-15',
+        dpaReviewDate: '2025-01-15',
+        country: 'Irland (EU/EØS)',
+        transferBasis: 'EU_EOS',
+        subProcessors: ['Microsoft Corp (USA - EU-U.S. Data Privacy Framework)'],
+        securityCertifications: ['ISO 27001', 'ISO 27018', 'SOC 2 Type II'],
+        riskLevel: 'Lav',
+        connectedSystemIds: [],
+        notes: 'Hovedleverandør av skyinfrastruktur og samhandling. Standard DPA dekket under Enterprise Agreement.'
+    },
+    {
+        id: 'v-2',
+        name: 'Amazon Web Services EMEA SARL',
+        orgNumber: 'LU 27798135',
+        contactPerson: 'AWS Compliance Support',
+        contactEmail: 'aws-dpa-team@amazon.com',
+        servicesDelivered: 'Skyinfrastruktur, hosting av applikasjonsservere og databaser',
+        dpaStatus: 'Signert',
+        dpaLink: 'https://aws.amazon.com/compliance/gdpr-center/',
+        dpaSignDate: '2023-09-01',
+        dpaReviewDate: '2025-09-01',
+        country: 'Luxembourg (EU/EØS)',
+        transferBasis: 'EU_EOS',
+        subProcessors: ['Amazon.com Inc (USA)'],
+        securityCertifications: ['ISO 27001', 'SOC 1/2/3', 'C5'],
+        riskLevel: 'Lav',
+        connectedSystemIds: [],
+        notes: 'Datasenter i Stockholm (eu-north-1) og Frankfurt (eu-central-1).'
+    },
+    {
+        id: 'v-3',
+        name: 'Visma Software Norge AS',
+        orgNumber: '980 500 585',
+        contactPerson: 'Kundeansvarlig Visma',
+        contactEmail: 'support@visma.no',
+        servicesDelivered: 'ERP, økonomi- og lønnssystem',
+        dpaStatus: 'Signert',
+        dpaLink: 'https://www.visma.no/personvern/databehandleravtale/',
+        dpaSignDate: '2023-05-10',
+        dpaReviewDate: '2025-05-10',
+        country: 'Norge',
+        transferBasis: 'EU_EOS',
+        subProcessors: ['Visma IT & Communications AS'],
+        securityCertifications: ['ISO 27001', 'ISAE 3402 Type II'],
+        riskLevel: 'Lav',
+        connectedSystemIds: [],
+        notes: 'Behandler ansattopplysninger og lønnsdata.'
+    }
+];
 
 const defaultState: ProjectState = {
     companyName: 'My Organization',
     assessments: {},
     documentAnswers: {},
     systems: [],
-    personvernVurderinger: {}
+    personvernVurderinger: {},
+    vendors: defaultVendors,
 };
 
 export function useAssessmentStore() {
@@ -18,7 +79,11 @@ export function useAssessmentStore() {
             try {
                 const parsed = JSON.parse(stored);
                 // Merge with defaults to handle schema migrations
-                return { ...defaultState, ...parsed };
+                return {
+                    ...defaultState,
+                    ...parsed,
+                    vendors: (parsed.vendors && parsed.vendors.length > 0) ? parsed.vendors : defaultVendors,
+                };
             } catch (e) {
                 console.error('Failed to parse stored state', e);
             }
@@ -218,6 +283,30 @@ export function useAssessmentStore() {
         }));
     };
 
+    const addVendor = (vendor: Omit<Vendor, 'id'>) => {
+        const id = `vendor-${Date.now()}`;
+        const newVendor: Vendor = { ...vendor, id };
+        setState(prev => ({
+            ...prev,
+            vendors: [...(prev.vendors || []), newVendor]
+        }));
+        return newVendor;
+    };
+
+    const updateVendor = (updated: Vendor) => {
+        setState(prev => ({
+            ...prev,
+            vendors: (prev.vendors || []).map(v => v.id === updated.id ? updated : v)
+        }));
+    };
+
+    const deleteVendor = (id: string) => {
+        setState(prev => ({
+            ...prev,
+            vendors: (prev.vendors || []).filter(v => v.id !== id)
+        }));
+    };
+
     return {
         state,
         updateAssessment,
@@ -231,6 +320,9 @@ export function useAssessmentStore() {
         addSystem,
         updateSystem,
         deleteSystem,
-        updatePrivacyAssessment
+        updatePrivacyAssessment,
+        addVendor,
+        updateVendor,
+        deleteVendor
     };
 }

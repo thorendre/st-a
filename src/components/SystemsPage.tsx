@@ -343,12 +343,18 @@ export const SystemsPage = () => {
                                     <input 
                                         id="sys-leverandor"
                                         type="text" 
+                                        list="vendor-suggestions"
                                         value={editingSystem.leverandor} 
                                         onChange={e => setEditingSystem({ ...editingSystem, leverandor: e.target.value })}
                                         className="risk-input"
                                         style={{ width: '100%', fontSize: '13px' }}
-                                        placeholder="F.eks. Microsoft, Visma..."
+                                        placeholder="F.eks. Microsoft, Visma, AWS..."
                                     />
+                                    <datalist id="vendor-suggestions">
+                                        {(state.vendors || []).map(v => (
+                                            <option key={v.id} value={v.name}>{v.country ? `(${v.country})` : ''}</option>
+                                        ))}
+                                    </datalist>
                                 </div>
                             </div>
 

@@ -6,7 +6,8 @@ import { Risk, Likelihood, Consequence, RiskStatus, RiskCategory, RiskProject } 
 import { defaultRiskCategories, riskBanks, RiskBank } from '../data/riskCategories';
 import {
     Plus, Trash2, ChevronDown, ChevronRight, Edit3, Shield, AlertTriangle,
-    FolderPlus, Eye, EyeOff, X, Check, ArrowRight, BookOpen, Database
+    FolderPlus, Eye, EyeOff, X, Check, ArrowRight, BookOpen, Database,
+    ExternalLink, RefreshCw
 } from 'lucide-react';
 
 const LIKELIHOOD_LABELS: Record<string, Record<Likelihood, string>> = {
@@ -51,10 +52,12 @@ function getCellBgColor(l: number, c: number): string {
 function InlineRiskControlsEditor({
     risk,
     onSave,
+    onCreateJiraTask,
     t,
 }: {
     risk: Risk;
     onSave: (updates: Partial<Risk>) => void;
+    onCreateJiraTask?: () => void;
     t: (key: string) => string;
 }) {
     const [existing, setExisting] = useState(risk.existingControls || '');
@@ -94,9 +97,30 @@ function InlineRiskControlsEditor({
                     />
                 </div>
                 <div>
-                    <label htmlFor={`inline-planned-${risk.id}`} className="risk-label" style={{ marginBottom: '4px' }}>
-                        {t('risk.planned_controls_label')}
-                    </label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <label htmlFor={`inline-planned-${risk.id}`} className="risk-label" style={{ margin: 0 }}>
+                            {t('risk.planned_controls_label')}
+                        </label>
+                        {risk.jiraIssueKey ? (
+                            <span style={{
+                                fontSize: '10px', display: 'inline-flex', alignItems: 'center', gap: '4px',
+                                padding: '1px 6px', borderRadius: '4px', background: 'rgba(37, 99, 235, 0.1)', color: '#2563eb', fontWeight: 600
+                            }}>
+                                <ExternalLink size={10} /> Jira: {risk.jiraIssueKey} ({risk.jiraStatus || 'IN PROGRESS'})
+                            </span>
+                        ) : onCreateJiraTask ? (
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); onCreateJiraTask(); }}
+                                style={{
+                                    background: 'none', border: 'none', cursor: 'pointer',
+                                    color: '#2563eb', fontSize: '11px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '3px'
+                                }}
+                            >
+                                + Lag Jira Task
+                            </button>
+                        ) : null}
+                    </div>
                     <textarea
                         id={`inline-planned-${risk.id}`}
                         className="risk-input"
@@ -150,6 +174,7 @@ export function RiskPage() {
         store, activeProject, createProject, setActiveProject, deleteProject, updateProject,
         addCategory, toggleCategory, removeCategory, importDefaultCategory,
         addRisk, updateRisk, deleteRisk, addRisksFromBank, getAllRisks, getRiskLevel,
+        syncWithJira, createJiraTaskForRisk,
     } = useRiskStore();
 
     const { state } = useAssessmentStore();
@@ -158,6 +183,9 @@ export function RiskPage() {
     const [newProjectName, setNewProjectName] = useState('');
     const [newProjectDesc, setNewProjectDesc] = useState('');
     const [newProjectSystemId, setNewProjectSystemId] = useState('');
+    const [newProjectJira, setNewProjectJira] = useState(false);
+    const [newProjectJiraKey, setNewProjectJiraKey] = useState('SEC');
+    const [jiraSyncSuccess, setJiraSyncSuccess] = useState(false);
     const [editingProject, setEditingProject] = useState<RiskProject | null>(null);
     const [expandedRisk, setExpandedRisk] = useState<string | null>(null);
     const [editingRisk, setEditingRisk] = useState<(Omit<Risk, 'id' | 'categoryId'> & { categoryId?: string; id?: string }) | null>(null);
@@ -309,17 +337,48 @@ export function RiskPage() {
                                     </select>
                                 </div>
                             )}
+
+                            <div>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, color: '#2563eb' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={newProjectJira}
+                                        onChange={e => setNewProjectJira(e.target.checked)}
+                                        style={{ accentColor: '#2563eb' }}
+                                    />
+                                    Opprett tilknyttet Jira Epic for prosjektet
+                                </label>
+                                {newProjectJira && (
+                                    <div style={{ marginTop: '6px', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                        <label className="risk-label" style={{ margin: 0, whiteSpace: 'nowrap' }}>Jira Prosjektnøkkel:</label>
+                                        <input
+                                            type="text"
+                                            value={newProjectJiraKey}
+                                            onChange={e => setNewProjectJiraKey(e.target.value.toUpperCase())}
+                                            className="risk-input"
+                                            style={{ width: '80px', padding: '4px 8px', fontSize: '12px', textTransform: 'uppercase' }}
+                                            placeholder="SEC"
+                                        />
+                                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                                            Vil generere f.eks. {(newProjectJiraKey || 'SEC').toUpperCase()}-101 i Jira
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+
                             <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
                                 <button className="risk-btn risk-btn-primary"
                                     onClick={() => {
                                         if (newProjectName.trim()) {
-                                            createProject(newProjectName.trim(), newProjectDesc.trim(), true, newProjectSystemId || undefined);
-                                            setNewProjectName(''); setNewProjectDesc(''); setNewProjectSystemId(''); setShowNewProject(false);
+                                            const epicKey = newProjectJira ? `${(newProjectJiraKey || 'SEC').toUpperCase().trim()}-${Math.floor(100 + Math.random() * 900)}` : undefined;
+                                            const epicUrl = epicKey ? `https://jira.company.com/browse/${epicKey}` : undefined;
+                                            createProject(newProjectName.trim(), newProjectDesc.trim(), true, newProjectSystemId || undefined, epicKey, epicUrl);
+                                            setNewProjectName(''); setNewProjectDesc(''); setNewProjectSystemId(''); setNewProjectJira(false); setShowNewProject(false);
                                         }
                                     }}>
                                     <Check size={14} /> {t('risk.create')}
                                 </button>
-                                <button className="risk-btn" onClick={() => { setShowNewProject(false); setNewProjectName(''); setNewProjectDesc(''); setNewProjectSystemId(''); }}>
+                                <button className="risk-btn" onClick={() => { setShowNewProject(false); setNewProjectName(''); setNewProjectDesc(''); setNewProjectSystemId(''); setNewProjectJira(false); }}>
                                     {t('risk.cancel')}
                                 </button>
                             </div>
@@ -366,6 +425,44 @@ export function RiskPage() {
                     <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '4px' }}>{activeProject.description}</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {activeProject.jiraEpicKey && (
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                            <a
+                                href={activeProject.jiraEpicUrl || `https://jira.atlassian.net/browse/${activeProject.jiraEpicKey}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="status-badge"
+                                style={{
+                                    background: 'rgba(0, 82, 204, 0.12)',
+                                    color: '#2684FF',
+                                    borderColor: 'rgba(0, 82, 204, 0.3)',
+                                    padding: '6px 12px',
+                                    fontSize: '12px',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    textDecoration: 'none',
+                                    fontWeight: 600
+                                }}
+                            >
+                                <ExternalLink size={13} />
+                                Epic: {activeProject.jiraEpicKey}
+                            </a>
+                            <button
+                                onClick={() => {
+                                    syncWithJira(activeProject.id);
+                                    setJiraSyncSuccess(true);
+                                    setTimeout(() => setJiraSyncSuccess(false), 2000);
+                                }}
+                                className="btn-secondary"
+                                style={{ padding: '6px 10px', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                title="Synkroniser tiltaksstatuser fra Jira"
+                            >
+                                <RefreshCw size={12} className={jiraSyncSuccess ? 'animate-spin' : ''} />
+                                {jiraSyncSuccess ? 'Synkronisert!' : 'Synk Jira'}
+                            </button>
+                        </div>
+                    )}
                     <span className="status-badge" style={{
                         background: 'var(--bg-secondary)',
                         color: 'var(--text-secondary)',
@@ -694,7 +791,27 @@ export function RiskPage() {
                                                             {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                                                         </button>
                                                     </td>
-                                                    <td style={{ fontWeight: 500, fontSize: '13px' }}>{risk.title}</td>
+                                                    <td style={{ fontWeight: 500, fontSize: '13px' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                                            <span>{risk.title}</span>
+                                                            {risk.jiraIssueKey && (
+                                                                <span
+                                                                    className="status-badge"
+                                                                    style={{
+                                                                        fontSize: '10px',
+                                                                        padding: '1px 5px',
+                                                                        background: 'rgba(0, 82, 204, 0.1)',
+                                                                        color: '#2684FF',
+                                                                        borderColor: 'rgba(0, 82, 204, 0.25)',
+                                                                        fontWeight: 600
+                                                                    }}
+                                                                    title={`Jira Oppgave: ${risk.jiraIssueKey} (${risk.jiraStatus || 'IN PROGRESS'})`}
+                                                                >
+                                                                    {risk.jiraIssueKey}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </td>
                                                     <td>
                                                         <span className="domain-tag domain-technological" style={{ fontSize: '10px' }}>
                                                             {cat ? getCatName(cat) : '—'}
@@ -851,6 +968,9 @@ export function RiskPage() {
                                                                         risk={risk}
                                                                         onSave={(updates) => {
                                                                             updateRisk(activeProject.id, risk.categoryId, risk.id, updates);
+                                                                        }}
+                                                                        onCreateJiraTask={() => {
+                                                                            createJiraTaskForRisk(activeProject.id, risk.categoryId, risk.id);
                                                                         }}
                                                                         t={t}
                                                                     />

@@ -31,12 +31,41 @@ export interface ControlAssessment {
     lastUpdated: string;
 }
 
+export type ModuleId = 'overview' | 'controls' | 'dora' | 'nis2' | 'risk' | 'systems' | 'privacy' | 'documents' | 'about';
+export type ModuleConfig = Record<ModuleId, boolean>;
+
 export interface ProjectState {
     companyName: string;
     assessments: Record<string, ControlAssessment>;
     documentAnswers: Record<string, string>;
     systems: ITSystem[];
     personvernVurderinger: Record<string, PersonvernVurdering>;
+    vendors: Vendor[];
+}
+
+// ─── Vendor / Supplier Inventory Types ───
+export type DpaStatus = 'Signert' | 'Under forhandling' | 'Mangler' | 'Ikke relevant';
+export type OverforingsGrunnlag = 'EU_EOS' | 'SCC' | 'Adequacy_DPF' | 'Unntak';
+export type LeverandorRisiko = 'Lav' | 'Moderat' | 'Høy';
+
+export interface Vendor {
+    id: string;
+    name: string;
+    orgNumber?: string;
+    contactPerson?: string;
+    contactEmail?: string;
+    servicesDelivered: string;
+    dpaStatus: DpaStatus;
+    dpaLink?: string;
+    dpaSignDate?: string;
+    dpaReviewDate?: string;
+    country: string;
+    transferBasis?: OverforingsGrunnlag;
+    subProcessors?: string[];
+    securityCertifications?: string[];
+    riskLevel: LeverandorRisiko;
+    connectedSystemIds: string[];
+    notes?: string;
 }
 
 // ─── System Inventory Types ───
@@ -105,6 +134,8 @@ export interface Risk {
     status: RiskStatus;
     residualLikelihood?: Likelihood;
     residualConsequence?: Consequence;
+    jiraIssueKey?: string;
+    jiraStatus?: string;
 }
 
 export interface RiskCategory {
@@ -123,9 +154,18 @@ export interface RiskProject {
     name: string;
     description: string;
     systemId?: string; // Linked system ID
+    jiraEpicKey?: string;
+    jiraEpicUrl?: string;
     createdAt: string;
     updatedAt: string;
     categories: RiskCategory[];
+}
+
+export interface JiraConfig {
+    enabled: boolean;
+    baseUrl: string;
+    projectKey: string;
+    autoCreateTasks: boolean;
 }
 
 export interface RiskStore {
