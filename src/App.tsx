@@ -337,7 +337,7 @@ function App() {
 
                 {/* Main Scrollable View */}
                 <div className="page-container">
-                    {activeTab === 'overview' && <Dashboard onNavigateToControls={() => setActiveTab('controls')} />}
+                    {activeTab === 'overview' && <Dashboard onNavigateToControls={() => setActiveTab('controls')} moduleConfig={moduleConfig} />}
                     {activeTab === 'controls' && <ControlsPage />}
                     {activeTab === 'nsm' && (
                         <RegulationPage

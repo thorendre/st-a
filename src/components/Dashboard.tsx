@@ -37,9 +37,18 @@ function computeRegStats(controls: { id: string; guidance: { id: string }[] }[],
     return { total, implemented, notApplicable, inProgress, planning, notStarted, pct, guideTotal, guideDone };
 }
 
-export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () => void }) => {
+/** Module IDs that map to regulation cards in the dashboard */
+type RegModuleId = 'controls' | 'nsm' | 'nist' | 'soc2' | 'dora' | 'nis2';
+
+export const Dashboard = ({ onNavigateToControls, moduleConfig }: {
+    onNavigateToControls?: () => void;
+    moduleConfig?: Record<string, boolean>;
+}) => {
     const { state, exportData, importData, resetData } = useAssessmentStore();
     const { lang, t } = useLang();
+
+    /** Helper: is a given module enabled (default true if no config provided) */
+    const isEnabled = (id: RegModuleId) => !moduleConfig || moduleConfig[id] !== false;
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) importData(e.target.files[0]);
@@ -87,12 +96,12 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
 
             {/* Regulation overview row */}
             <div className="dashboard-reg-grid">
-                <RegCard label="ISO 27001" stats={isoStats} data={statusPieData(isoStats)} color="var(--accent-primary)" />
-                <RegCard label="NSM Grunnprinsipper" stats={nsmStats} data={statusPieData(nsmStats)} color="#0d9488" />
-                <RegCard label="NIST CSF 2.0" stats={nistStats} data={statusPieData(nistStats)} color="#2563eb" />
-                <RegCard label="SOC 2 Type II" stats={soc2Stats} data={statusPieData(soc2Stats)} color="#7c3aed" />
-                <RegCard label="DORA" stats={doraStats} data={statusPieData(doraStats)} color="var(--accent-teal)" />
-                <RegCard label="NIS2" stats={nis2Stats} data={statusPieData(nis2Stats)} color="var(--accent-burgundy)" />
+                {isEnabled('controls') && <RegCard label="ISO 27001" stats={isoStats} data={statusPieData(isoStats)} color="var(--accent-primary)" />}
+                {isEnabled('nsm') && <RegCard label="NSM Grunnprinsipper" stats={nsmStats} data={statusPieData(nsmStats)} color="#0d9488" />}
+                {isEnabled('nist') && <RegCard label="NIST CSF 2.0" stats={nistStats} data={statusPieData(nistStats)} color="#2563eb" />}
+                {isEnabled('soc2') && <RegCard label="SOC 2 Type II" stats={soc2Stats} data={statusPieData(soc2Stats)} color="#7c3aed" />}
+                {isEnabled('dora') && <RegCard label="DORA" stats={doraStats} data={statusPieData(doraStats)} color="var(--accent-teal)" />}
+                {isEnabled('nis2') && <RegCard label="NIS2" stats={nis2Stats} data={statusPieData(nis2Stats)} color="var(--accent-burgundy)" />}
             </div>
 
             {/* Bottom row: ISMS docs + guidance steps */}
@@ -120,12 +129,12 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
                 <div className="card" style={{ padding: '24px' }}>
                     <h3 style={sectionLabel}>{t('dash.impl_steps_total')}</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <GuidanceBar label="ISO 27001" done={isoStats.guideDone} total={isoStats.guideTotal} color="var(--accent-primary)" />
-                        <GuidanceBar label="NSM Grunnprinsipper" done={nsmStats.guideDone} total={nsmStats.guideTotal} color="#0d9488" />
-                        <GuidanceBar label="NIST CSF 2.0" done={nistStats.guideDone} total={nistStats.guideTotal} color="#2563eb" />
-                        <GuidanceBar label="SOC 2 Type II" done={soc2Stats.guideDone} total={soc2Stats.guideTotal} color="#7c3aed" />
-                        <GuidanceBar label="DORA" done={doraStats.guideDone} total={doraStats.guideTotal} color="var(--accent-teal)" />
-                        <GuidanceBar label="NIS2" done={nis2Stats.guideDone} total={nis2Stats.guideTotal} color="var(--accent-burgundy)" />
+                        {isEnabled('controls') && <GuidanceBar label="ISO 27001" done={isoStats.guideDone} total={isoStats.guideTotal} color="var(--accent-primary)" />}
+                        {isEnabled('nsm') && <GuidanceBar label="NSM Grunnprinsipper" done={nsmStats.guideDone} total={nsmStats.guideTotal} color="#0d9488" />}
+                        {isEnabled('nist') && <GuidanceBar label="NIST CSF 2.0" done={nistStats.guideDone} total={nistStats.guideTotal} color="#2563eb" />}
+                        {isEnabled('soc2') && <GuidanceBar label="SOC 2 Type II" done={soc2Stats.guideDone} total={soc2Stats.guideTotal} color="#7c3aed" />}
+                        {isEnabled('dora') && <GuidanceBar label="DORA" done={doraStats.guideDone} total={doraStats.guideTotal} color="var(--accent-teal)" />}
+                        {isEnabled('nis2') && <GuidanceBar label="NIS2" done={nis2Stats.guideDone} total={nis2Stats.guideTotal} color="var(--accent-burgundy)" />}
                     </div>
                 </div>
             </div>
