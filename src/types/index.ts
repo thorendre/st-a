@@ -1,0 +1,134 @@
+export type ImplementationStatus = 'Not Started' | 'Planning' | 'In Progress' | 'Implemented' | 'Not Applicable';
+
+export interface GuidanceStep {
+    id: string;
+    title: string;
+    description: string;
+    auditEvidence?: string;
+}
+
+export interface RegulationControl {
+    id: string;
+    domain: string;
+    title: string;
+    titleNo?: string;
+    description: string;
+    descriptionNo?: string;
+    guidance: GuidanceStep[];
+}
+
+// Legacy alias
+export type ISOControl = RegulationControl & {
+    mappedNistIds: string[];
+    mappedNsmIds: string[];
+};
+
+export interface ControlAssessment {
+    controlId: string;
+    status: ImplementationStatus;
+    notes: string;
+    completedSteps: string[];
+    lastUpdated: string;
+}
+
+export interface ProjectState {
+    companyName: string;
+    assessments: Record<string, ControlAssessment>;
+    documentAnswers: Record<string, string>;
+    systems: ITSystem[];
+    personvernVurderinger: Record<string, PersonvernVurdering>;
+}
+
+// ─── System Inventory Types ───
+export type Driftsmodell = 'SaaS' | 'PaaS' | 'IaaS' | 'On-Premise' | 'Ekstern leverandør';
+export type KonfidensialitetsKlasse = 'Offentlig' | 'Intern' | 'Konfidensiell' | 'Strengt konfidensiell';
+
+export interface ITSystem {
+    id: string;
+    name: string;
+    description: string;
+    systemOwner: string;
+    driftsmodell: Driftsmodell;
+    leverandor: string;
+    konfidensialitet: KonfidensialitetsKlasse;
+    tilknyttetRisikoProsjektId?: string;
+    
+    // Privacy fields (filled in by system owner)
+    behandlerPersonopplysninger: boolean;
+    personopplysningerTyper?: string[]; // e.g. ['Navn', 'E-post', 'Fødselsnummer', 'Helsedata']
+    registrerteKategorier?: string[]; // e.g. ['Ansatte', 'Kunder']
+    formalsBeskrivelse?: string;
+}
+
+// ─── Privacy Module Types ───
+export type PersonvernStatus = 'waiting_on_owner' | 'under_review' | 'action_required' | 'approved';
+export type RettsligGrunnlag = 'Samtykke' | 'Avtale' | 'Rettslig_forpliktelse' | 'Berettiget_interesse' | 'Vitale_interesser' | 'Allmenn_interesse';
+
+export interface PersonvernVurdering {
+    systemId: string;
+    status: PersonvernStatus;
+    rettsligGrunnlag?: RettsligGrunnlag;
+    databehandlerAvtaleSignert: 'Ja' | 'Nei' | 'Ikke_relevant';
+    databehandlerAvtaleLenke?: string;
+    dpiaPakrevd: boolean;
+    dpiaGodkjent: boolean;
+    dpiaRisikoProsjektId?: string;
+    informertRegistrerte: boolean;
+    sletterutineEtablert: boolean;
+    slettefristBeskrivelse?: string;
+    dpoKommentarer?: string;
+    sistVurdertAvDpo?: string;
+}
+
+// ─── Risk Assessment Types ───
+
+export type Likelihood = 1 | 2 | 3 | 4 | 5;
+export type Consequence = 1 | 2 | 3 | 4 | 5;
+export type RiskStatus = 'open' | 'mitigated' | 'accepted' | 'closed';
+
+export interface Risk {
+    id: string;
+    title: string;
+    description: string;
+    categoryId: string;
+    threat: string;
+    vulnerability: string;
+    likelihood: Likelihood;
+    consequence: Consequence;
+    kScore: Consequence;
+    iScore: Consequence;
+    tScore: Consequence;
+    aScore: Consequence;
+    existingControls: string;
+    plannedControls: string;
+    owner: string;
+    status: RiskStatus;
+    residualLikelihood?: Likelihood;
+    residualConsequence?: Consequence;
+}
+
+export interface RiskCategory {
+    id: string;
+    name: string;
+    nameNn?: string;
+    description: string;
+    descriptionNn?: string;
+    isDefault: boolean;
+    enabled: boolean;
+    risks: Risk[];
+}
+
+export interface RiskProject {
+    id: string;
+    name: string;
+    description: string;
+    systemId?: string; // Linked system ID
+    createdAt: string;
+    updatedAt: string;
+    categories: RiskCategory[];
+}
+
+export interface RiskStore {
+    projects: RiskProject[];
+    activeProjectId: string | null;
+}
