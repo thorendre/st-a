@@ -145,9 +145,7 @@ export interface Risk {
 export interface RiskCategory {
     id: string;
     name: string;
-    nameNn?: string;
     description: string;
-    descriptionNn?: string;
     isDefault: boolean;
     enabled: boolean;
     risks: Risk[];

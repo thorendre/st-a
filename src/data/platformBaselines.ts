@@ -3,9 +3,7 @@ import { RiskCategory } from '../types';
 export interface PlatformBaseline {
     id: string;
     name: string;
-    nameNn?: string;
     description: string;
-    descriptionNn?: string;
     platformType: 'kubernetes' | 'cloud' | 'onprem';
     provider: string;
     managedControlsSummary: string;
@@ -18,18 +16,14 @@ export interface PlatformBaseline {
 export const k8sPlatformBaseline: PlatformBaseline = {
     id: 'platform-k8s',
     name: 'Intern Kubernetes / OpenShift Plattform (K8s)',
-    nameNn: 'Intern Kubernetes / OpenShift Plattform (K8s)',
     description: 'Virksomhetens interne container- og orkestreringsplattform. Plattformteamet drifter og herder nodene, klyngenettverket, ingress og kjøretidsmiljøet.',
-    descriptionNn: 'Verksemdas interne konteinar- og orkestreringsplattform. Plattformteamet driftar og herdar nodane, nettverket og køyretidsmiljøet.',
     platformType: 'kubernetes',
     provider: 'Internt Plattformteam (DevOps / SRE)',
     managedControlsSummary: 'Plattformteamet håndterer: Nodepatching og herdet OS, Kubernetes RBAC, etcd-kryptering i hvile, felles Ingress/WAF med automatisk TLS-sertifikathåndtering, Calico/Cilium mikrosegmentering (NetworkPolicies), PodSecurityStandards (Restricted), og sentralisert Prometheus/Loki overvåking.',
     category: {
         id: 'cat-platform-k8s',
         name: 'Arvet Plattformrisiko: Intern Kubernetes Plattform',
-        nameNn: 'Arva Plattformrisiko: Intern Kubernetes Plattform',
         description: 'Infrastruktur- og driftssikkerhet som ivaretas av det sentrale plattformteamet. Systemeier bygger på denne grunnmuren.',
-        descriptionNn: 'Infrastruktur- og driftstryggleik som vert handtert av det sentrale plattformteamet.',
         isDefault: false,
         enabled: true,
         risks: [
@@ -139,18 +133,14 @@ export const k8sPlatformBaseline: PlatformBaseline = {
 export const cloudPlatformBaseline: PlatformBaseline = {
     id: 'platform-cloud',
     name: 'Skyplattform (Azure / AWS Landing Zone)',
-    nameNn: 'Skyplattform (Azure / AWS Landing Zone)',
     description: 'Virksomhetens standardiserte bedriftsmiljø i skyen. Inkluderer felles sikkerhetsperimeter, Entra ID IAM, sentralisert logging og managed services.',
-    descriptionNn: 'Verksemdas standardiserte bedriftsmiljø i skyen med felles tryggleiksperimeter og Entra ID.',
     platformType: 'cloud',
     provider: 'Microsoft Azure / AWS Enterprise Cloud Platform',
     managedControlsSummary: 'Skyplattformen håndterer: Fysisk datasentersikkerhet og redundans på tvers av 3 Availability Zones, sentralisert IAM med Microsoft Entra ID Conditional Access, DDoS Protection Standard, Azure Firewall / NSG perimeter, disk- og databasekryptering med kundestyrte nøkler (KMS), samt Microsoft Sentinel SIEM-overvåking.',
     category: {
         id: 'cat-platform-cloud',
         name: 'Arvet Plattformrisiko: Skyplattform (Landing Zone)',
-        nameNn: 'Arva Plattformrisiko: Skyplattform (Landing Zone)',
         description: 'Sikkerhetstiltak levert av skyleverandør og sentralt skyteam.',
-        descriptionNn: 'Tryggleikstiltak levert av skyleverandør og skyteam.',
         isDefault: false,
         enabled: true,
         risks: [
@@ -212,18 +202,14 @@ export const cloudPlatformBaseline: PlatformBaseline = {
 export const onPremPlatformBaseline: PlatformBaseline = {
     id: 'platform-onprem',
     name: 'On-Premise Datasenter & Felles Nettverk',
-    nameNn: 'On-Premise Datasenter & Felles Nettverk',
     description: 'Virksomhetens eget datasenter og serverrom med felles lokal infrastruktur, nødstrøm og kjernebrannmurer.',
-    descriptionNn: 'Verksemdas eige datasenter og serverrom med lokal infrastruktur og kjernebrannmurar.',
     platformType: 'onprem',
     provider: 'Internt IKT-driftsteam',
     managedControlsSummary: 'Datasenterdrift ivaretar: Fysisk adgangskontroll med adgangskort og videoovervåking, nødstrøm (redundant UPS og dieselaggregat), automatisk gassbasert brannslukking, overvåket kjøling, og sentrale redundante kjernebrannmurer.',
     category: {
         id: 'cat-platform-onprem',
         name: 'Arvet Plattformrisiko: On-Premise Datasenter',
-        nameNn: 'Arva Plattformrisiko: On-Premise Datasenter',
         description: 'Fysisk sikring, strøm, kjøling og nettverk ivaretatt av lokal IKT-drift.',
-        descriptionNn: 'Fysisk sikring, straum og nettverk handtert av lokal IKT-drift.',
         isDefault: false,
         enabled: true,
         risks: [
@@ -277,9 +263,7 @@ export const defaultSystemSpecificCategories: RiskCategory[] = [
     {
         id: 'cat-sys-appsec',
         name: 'Applikasjonssikkerhet & Kodelogikk',
-        nameNn: 'Applikasjonstryggleik & Kodelogikk',
         description: 'Sårbarheter og feil i systemets egen kildekode, brukergrensesnitt og forretningslogikk (OWASP Top 10).',
-        descriptionNn: 'Sårbarheiter og feil i systemets eigen kjeldekode og forretningslogikk.',
         isDefault: true,
         enabled: true,
         risks: [
@@ -316,9 +300,7 @@ export const defaultSystemSpecificCategories: RiskCategory[] = [
     {
         id: 'cat-sys-data',
         name: 'Informasjonsbehandling & Personvern (GDPR)',
-        nameNn: 'Informasjonsbehandling & Personvern (GDPR)',
         description: 'Risiko knyttet til systemets behandling, lagring og eksponering av sensitive personopplysninger eller forretningshemmeligheter.',
-        descriptionNn: 'Risiko knytt til systemets behandling og lagring av personopplysningar.',
         isDefault: true,
         enabled: true,
         risks: [
@@ -355,9 +337,7 @@ export const defaultSystemSpecificCategories: RiskCategory[] = [
     {
         id: 'cat-sys-api',
         name: 'API-er, Integrasjoner & Eksterne avhengigheter',
-        nameNn: 'API-ar, Integrasjonar & Eksterne avhengnader',
         description: 'Risiko knyttet til systemets grensesnitt mot andre fagsystemer, databaser og tredjepartstjenester.',
-        descriptionNn: 'Risiko knytt til systemets grensesnitt mot andre fagsystem og tenester.',
         isDefault: true,
         enabled: true,
         risks: [
@@ -394,9 +374,7 @@ export const defaultSystemSpecificCategories: RiskCategory[] = [
     {
         id: 'cat-sys-user',
         name: 'Systemspesifikke Brukerfeil & Operasjonell drift',
-        nameNn: 'Systemspesifikke Brukarfeil & Operasjonell drift',
         description: 'Feilhandlinger og utilsiktede hendelser knyttet til bruken og administrasjonen av dette spesifikke systemet.',
-        descriptionNn: 'Feilhandlingar og utilsikta hendingar knytt til bruken av dette systemet.',
         isDefault: true,
         enabled: true,
         risks: [

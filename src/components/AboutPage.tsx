@@ -1,10 +1,6 @@
-import { useLang } from '../hooks/useLang';
-import { Database, Download, Upload, Globe, Shield, Code, Server, FileText, Info, Layers } from 'lucide-react';
+import { Database, Download, Upload, Shield, Code, Server, FileText, Info, Layers, CheckCircle2 } from 'lucide-react';
 
 export const AboutPage = () => {
-    const { lang } = useLang();
-    const nn = lang === 'nn';
-
     const sectionStyle: React.CSSProperties = {
         marginBottom: '32px',
     };
@@ -46,32 +42,31 @@ export const AboutPage = () => {
                 Om Ståa
             </h1>
             <p style={{ ...textStyle, fontSize: '15px', marginBottom: '32px' }}>
-                {nn
-                    ? 'Ståa er eit lokalt styringssystem for informasjonstryggleik som hjelper organisasjonar med å implementere og spore samsvar med ISO 27001, DORA og NIS2.'
-                    : 'Ståa er et lokalt styringssystem for informasjonssikkerhet som hjelper organisasjoner med å implementere og spore samsvar med ISO 27001, DORA og NIS2.'}
+                Ståa er et lokalt og sikkert styringssystem for informasjonssikkerhet (ISMS) og cybersikkerhetsstyring. Løsningen hjelper norske og internasjonale virksomheter med å implementere, spore og dokumentere etterlevelse mot <strong>ISO 27001</strong>, <strong>NSM Grunnprinsipper 2.1</strong>, <strong>NIST CSF 2.0</strong>, <strong>SOC 2 Type II</strong>, <strong>DORA</strong> og <strong>NIS2</strong>.
             </p>
 
             {/* Arkitektur */}
             <div className="card" style={{ padding: '28px', ...sectionStyle }}>
                 <h2 style={headingStyle}>
                     <Layers size={20} color="var(--accent-teal)" />
-                    Arkitektur
+                    Arkitektur og Funksjonalitet
                 </h2>
                 <p style={textStyle}>
-                    {nn
-                        ? 'Ståa er ein fullstendig klientside-applikasjon (SPA) som køyrer heilt i nettlesaren din. Ingen data vert sendt til nokon tenar – alt vert lagra lokalt på di maskin.'
-                        : 'Ståa er en fullstendig klientside-applikasjon (SPA) som kjører helt i nettleseren din. Ingen data sendes til noen server – alt lagres lokalt på din maskin.'}
+                    Ståa er en fullstendig klientside-applikasjon (Single Page Application) som kjører direkte i nettleseren din. Ingen data sendes til eksterne servere – all informasjon forblir strengt konfidensiell og lagret lokalt.
                 </p>
 
-                <h3 style={subHeadingStyle}>
-                    {nn ? 'Hovudkomponentar' : 'Hovedkomponenter'}
-                </h3>
+                <h3 style={subHeadingStyle}>Hovedkomponenter</h3>
                 <ul style={listStyle}>
-                    <li><strong>Oversikt</strong> – {nn ? 'Aggregert status for alle rammeverk med framgangsdiagram' : 'Aggregert status for alle rammeverk med fremgangsdiagrammer'}</li>
-                    <li><strong>ISO 27001</strong> – {nn ? 'Alle 93 kontrollar frå Annex A med implementeringsrettleiing' : 'Alle 93 kontroller fra Annex A med implementeringsveiledning'}</li>
-                    <li><strong>DORA</strong> – {nn ? '28 krav frå Digital Operational Resilience Act med implementeringssteg' : '28 krav fra Digital Operational Resilience Act med implementeringssteg'}</li>
-                    <li><strong>NIS2</strong> – {nn ? '26 krav frå Network and Information Security Directive med implementeringssteg' : '26 krav fra Network and Information Security Directive med implementeringssteg'}</li>
-                    <li><strong>{nn ? 'ISMS-dokument' : 'ISMS-dokumenter'}</strong> – {nn ? 'Standardiserte styringsdokument med rettleia utfylling' : 'Standardiserte styringsdokumenter med veiledet utfylling'}</li>
+                    <li><strong>Oversikt & Dashbord</strong> – Samlet modenhet og fremdriftsgrafer på tvers av alle rammeverk.</li>
+                    <li><strong>ISO/IEC 27001</strong> – Alle 93 kontroller fra Annex A med veiledning og revisjonsbevis.</li>
+                    <li><strong>NSM Grunnprinsipper v2.1</strong> – Alle 21 offisielle prinsipper fra Nasjonal sikkerhetsmyndighet med tydeliggjøring av de 15 prioriterte tiltakene.</li>
+                    <li><strong>NIST CSF 2.0</strong> – Kjernefunksjonene Govern, Identify, Protect, Detect, Respond og Recover.</li>
+                    <li><strong>SOC 2 Type II</strong> – AICPA Trust Services Criteria (Sikkerhet, Tilgjengelighet, Integritet, Konfidensialitet og Personvern).</li>
+                    <li><strong>DORA</strong> – Krav fra Digital Operational Resilience Act for finansforetak og IKT-tredjeparter.</li>
+                    <li><strong>NIS2</strong> – Krav fra cybersikkerhetsdirektivet for samfunnsviktige og vesentlige virksomheter.</li>
+                    <li><strong>Flerlags Risikostyring</strong> – 5×5 KITA-risikomatrise med plattformarv (Kubernetes/sky) for å unngå dobbeltarbeid.</li>
+                    <li><strong>Personvern & Leverandørregister</strong> – Kartlegging av databehandlere, DPA-er og overføringsgrunnlag.</li>
+                    <li><strong>ISMS-dokumenter</strong> – Standardiserte styringsdokumenter med veiledet utfylling.</li>
                 </ul>
             </div>
 
@@ -79,31 +74,27 @@ export const AboutPage = () => {
             <div className="card" style={{ padding: '28px', ...sectionStyle }}>
                 <h2 style={headingStyle}>
                     <Database size={20} color="var(--accent-teal)" />
-                    Datalagring
+                    Lokal Datalagring og Personvern
                 </h2>
                 <p style={textStyle}>
-                    {nn
-                        ? 'All data vert lagra i nettlesaren sin localStorage under nøkkelen infosec_dashboard_state. Det tyder:'
-                        : 'All data lagres i nettleserens localStorage under nøkkelen infosec_dashboard_state. Det betyr:'}
+                    All data lagres i nettleserens <code style={{ color: 'var(--accent-teal)' }}>localStorage</code>. Dette gir en rekke fordeler:
                 </p>
                 <ul style={listStyle}>
-                    <li>{nn ? '✅ Data vert verande på di maskin – ingen skylagring' : '✅ Data forblir på din maskin – ingen skylagring'}</li>
-                    <li>{nn ? '✅ Ingen brukarkontoar eller innlogging naudsynt' : '✅ Ingen brukerkontoer eller innlogging nødvendig'}</li>
-                    <li>{nn ? '✅ Fungerer heilt offline etter fyrste lasting' : '✅ Fungerer helt offline etter første lasting'}</li>
-                    <li>{nn ? '⚠️ Data er per nettlesar – ulike nettlesarar har ulike data' : '⚠️ Data er per nettleser – ulike nettlesere har ulike data'}</li>
-                    <li>{nn ? '⚠️ Sletting av nettlesardata vil slette tilstanden' : '⚠️ Sletting av nettleserdata vil slette tilstanden'}</li>
+                    <li>✅ <strong>Full datakontroll:</strong> Data forblir på din egen maskin – ingen ukontrollert skylagring.</li>
+                    <li>✅ <strong>Ingen innlogging nødvendig:</strong> Ingen brukerkontoer eller ekstern autentisering kreves.</li>
+                    <li>✅ <strong>Offline-støtte:</strong> Fungerer problemfritt uten internettilkobling etter første lasting.</li>
+                    <li>⚠️ <strong>Nettleserspesifikt:</strong> Data lagres per nettleserprofil; bruk eksport/import ved bytte av maskin eller nettleser.</li>
+                    <li>⚠️ <strong>Rensing:</strong> Dersom nettleserdata tømmes, slettes også lagret tilstand. Ta jevnlige sikkerhetskopier via JSON-eksport.</li>
                 </ul>
 
-                <h3 style={subHeadingStyle}>
-                    {nn ? 'Kva vert lagra?' : 'Hva lagres?'}
-                </h3>
+                <h3 style={subHeadingStyle}>Hva lagres?</h3>
                 <ul style={listStyle}>
-                    <li>{nn ? 'Organisasjonsnamn' : 'Organisasjonsnavn'}</li>
-                    <li>{nn ? 'Status for kvar kontroll/krav' : 'Status for hver kontroll/krav'}</li>
-                    <li>{nn ? 'Fullførte implementeringssteg per kontroll' : 'Fullførte implementeringssteg per kontroll'}</li>
-                    <li>{nn ? 'Notat knytte til kontrollar' : 'Notater knyttet til kontroller'}</li>
-                    <li>{nn ? 'Svar på ISMS-dokumentfelt' : 'Svar på ISMS-dokumentfelter'}</li>
-                    <li>{nn ? 'Valt språk og tema' : 'Valgt språk og tema'}</li>
+                    <li>Organisasjonsnavn og valgte moduler</li>
+                    <li>Status og merknader for hver kontroll og hvert krav</li>
+                    <li>Fullførte implementeringssteg per kontroll</li>
+                    <li>Risikoprosjekter, kategorier, tiltak og KITA-skårer</li>
+                    <li>Leverandøroversikt og databehandleravtaler</li>
+                    <li>Utfylte felter i ISMS-dokumenter</li>
                 </ul>
             </div>
 
@@ -111,12 +102,10 @@ export const AboutPage = () => {
             <div className="card" style={{ padding: '28px', ...sectionStyle }}>
                 <h2 style={headingStyle}>
                     <FileText size={20} color="var(--accent-teal)" />
-                    Eksport og import
+                    Sikkerhetskopiering (Eksport og Import)
                 </h2>
                 <p style={textStyle}>
-                    {nn
-                        ? 'Du kan ta sikkerheitskopi og overføre data mellom nettlesarar/maskinar via Oversikt-fana:'
-                        : 'Du kan sikkerhetskopiere og overføre data mellom nettlesere/maskiner via Oversikt-fanen:'}
+                    Du kan enkelt sikkerhetskopiere og overføre data mellom maskiner via Oversikt-fanen:
                 </p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '16px' }}>
@@ -126,9 +115,7 @@ export const AboutPage = () => {
                             <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>Eksporter</strong>
                         </div>
                         <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                            {nn
-                                ? 'Last ned all tilstand som ei JSON-fil. Inkluderer kontrollstatusar, steg, notat og dokumentsvar.'
-                                : 'Last ned all tilstand som en JSON-fil. Inkluderer kontrollstatuser, steg, notater og dokumentsvar.'}
+                            Last ned hele styringssystemets tilstand som en kryptert/sikret JSON-fil. Inkluderer alle kontroller, risikoprosjekter, leverandører og dokumenter.
                         </p>
                     </div>
                     <div style={{ padding: '16px', background: 'var(--card-inner-bg)', borderRadius: '10px', border: '1px solid var(--border-light)' }}>
@@ -137,9 +124,7 @@ export const AboutPage = () => {
                             <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>Importer</strong>
                         </div>
                         <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                            {nn
-                                ? 'Last opp ei tidlegare eksportert JSON-fil for å gjenopprette tilstanden. Erstattar all eksisterande data.'
-                                : 'Last opp en tidligere eksportert JSON-fil for å gjenopprette tilstanden. Erstatter all eksisterende data.'}
+                            Last opp en tidligere eksportert JSON-fil for å gjenopprette tilstanden umiddelbart.
                         </p>
                     </div>
                 </div>
@@ -149,23 +134,19 @@ export const AboutPage = () => {
             <div className="card" style={{ padding: '28px', ...sectionStyle }}>
                 <h2 style={headingStyle}>
                     <Shield size={20} color="var(--accent-teal)" />
-                    Automatisk statusoppdatering
+                    Automatisk Statusoppdatering
                 </h2>
                 <p style={textStyle}>
-                    {nn
-                        ? 'Statusen til kontrollar vert oppdatert automatisk basert på implementeringsstega du gjennomfører:'
-                        : 'Statusen til kontroller oppdateres automatisk basert på implementeringsstegene du gjennomfører:'}
+                    Statusen for kontroller og prinsipper oppdateres automatisk etter hvert som du fullfører implementeringsstegene:
                 </p>
                 <ul style={listStyle}>
-                    <li><strong style={{ color: 'var(--status-not-started-color)' }}>{nn ? 'Ikkje starta' : 'Ikke startet'}</strong> – {nn ? 'Ingen steg fullførte' : 'Ingen steg fullført'}</li>
-                    <li><strong style={{ color: 'var(--accent-gold)' }}>Under arbeid</strong> – {nn ? 'Nokre steg fullførte' : 'Noen steg fullført'}</li>
-                    <li><strong style={{ color: 'var(--accent-green)' }}>Implementert</strong> – {nn ? 'Alle steg fullførte' : 'Alle steg fullført'}</li>
-                    <li><strong style={{ color: 'var(--status-not-applicable-color)' }}>{nn ? 'Ikkje aktuelt' : 'Ikke aktuelt'}</strong> – {nn ? 'Manuelt satt, vert ikkje endra av steglogikken' : 'Manuelt satt, endres ikke av steglogikken'}</li>
+                    <li><strong style={{ color: 'var(--status-not-started-color)' }}>Ikke startet</strong> – Ingen implementeringssteg er fullført.</li>
+                    <li><strong style={{ color: 'var(--accent-gold)' }}>Under arbeid</strong> – Minst ett implementeringssteg er fullført.</li>
+                    <li><strong style={{ color: 'var(--accent-green)' }}>Implementert</strong> – Alle definerte steg og revisjonsbevis er oppfylt.</li>
+                    <li><strong style={{ color: 'var(--status-not-applicable-color)' }}>Ikke aktuelt</strong> – Manuelt satt status som overstyrer steglogikken.</li>
                 </ul>
                 <p style={{ ...textStyle, fontSize: '12px', fontStyle: 'italic' }}>
-                    {nn
-                        ? 'Du kan alltid overstyre statusen manuelt via nedtrekkslista.'
-                        : 'Du kan alltid overstyre statusen manuelt via nedtrekkslisten.'}
+                    Du kan alltid overstyre statusen manuelt via nedtrekkslisten dersom du har andre kompenserende tiltak.
                 </p>
             </div>
 
@@ -173,36 +154,33 @@ export const AboutPage = () => {
             <div className="card" style={{ padding: '28px', ...sectionStyle }}>
                 <h2 style={headingStyle}>
                     <Code size={20} color="var(--accent-teal)" />
-                    Teknologistack
+                    Teknologistack og Sikkerhetsdesign
                 </h2>
                 <div style={gridStyle}>
-                    <div style={chipStyle}><Globe size={14} /> React 18</div>
-                    <div style={chipStyle}><Code size={14} /> TypeScript</div>
+                    <div style={chipStyle}><Code size={14} /> React 18</div>
+                    <div style={chipStyle}><Code size={14} /> TypeScript 5</div>
                     <div style={chipStyle}><Server size={14} /> Vite</div>
                     <div style={chipStyle}><Info size={14} /> Lucide Icons</div>
                     <div style={chipStyle}><Database size={14} /> localStorage</div>
-                    <div style={chipStyle}><FileText size={14} /> Vanilla CSS</div>
+                    <div style={chipStyle}><FileText size={14} /> Modern CSS</div>
                 </div>
                 <ul style={listStyle}>
-                    <li><strong>React 18</strong> – Komponentbasert UI-rammeverk</li>
-                    <li><strong>TypeScript</strong> – {nn ? 'Typetryggleik og betre utviklaoppleving' : 'Typesikkerhet og bedre utvikleropplevelse'}</li>
-                    <li><strong>Vite</strong> – {nn ? 'Rask utviklingsserver og byggeverktøy' : 'Rask utviklingsserver og byggeverktøy'}</li>
-                    <li><strong>Lucide React</strong> – {nn ? 'Ikonbibliotek for konsistent visuelt uttrykk' : 'Ikonbibliotek for konsistent visuelt uttrykk'}</li>
-                    <li><strong>localStorage</strong> – {nn ? 'Nettlesarbasert datalagring – ingen database naudsynt' : 'Nettleserbasert datalagring – ingen database nødvendig'}</li>
-                    <li><strong>CSS Variables</strong> – {nn ? 'Temastøtte med lys/mørk modus via CSS custom properties' : 'Temastøtte med lys/mørk modus via CSS custom properties'}</li>
+                    <li><strong>React 18 & TypeScript</strong> – Robust, typesikker og modulær arkitektur.</li>
+                    <li><strong>Vite</strong> – Lynrask kompilering og optimalisert produksjonsbygg.</li>
+                    <li><strong>Lucide React</strong> – Konsistent, universelt tilgjengelig ikondesign.</li>
+                    <li><strong>CSS Custom Properties</strong> – Fuldynamisk tema med profesjonell lys og mørk modus.</li>
+                    <li><strong>Responsivt design</strong> – Fullverdig mobilopplevelse med dedikert skuffemeny og berøringsvennlige tabeller.</li>
                 </ul>
             </div>
 
-            {/* Språkstøtte */}
+            {/* Språk */}
             <div className="card" style={{ padding: '28px', ...sectionStyle }}>
                 <h2 style={headingStyle}>
-                    <Globe size={20} color="var(--accent-teal)" />
-                    {nn ? 'Språkstøtte' : 'Språkstøtte'}
+                    <CheckCircle2 size={20} color="var(--accent-teal)" />
+                    Språk og Terminologi
                 </h2>
                 <p style={textStyle}>
-                    {nn
-                        ? 'Ståa støttar bokmål og nynorsk. Byt språk med BM/NN-knappane i toppmenyen. Alle kontrollar, krav, domene, implementeringssteg og brukargrensesnittelement er omsette.'
-                        : 'Ståa støtter bokmål og nynorsk. Bytt språk med BM/NN-knappene i toppmenyen. Alle kontroller, krav, domener, implementeringssteg og brukergrensesnittelementer er oversatt.'}
+                    Ståa er skrevet på helhetlig og profesjonelt <strong>norsk bokmål</strong> tilpasset nasjonale og internasjonale standarder (NSM, Digdir, Datatilsynet, ISO og EU/EØS-direktiver).
                 </p>
             </div>
         </div>

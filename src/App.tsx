@@ -38,7 +38,7 @@ interface ModuleMeta {
 const ALL_MODULES: ModuleMeta[] = [
     { id: 'overview', title: 'Oversikt / Dashboard', description: 'Samlet modenhet, målinger og nøkkeltall', icon: LayoutDashboard },
     { id: 'controls', title: 'ISO/IEC 27001', description: '93 sikkerhetskontroller (Vedlegg A)', icon: ListCheck },
-    { id: 'nsm', title: 'NSM Grunnprinsipper', badge: 'NO', description: 'Nasjonalt sikkerhetsorgans grunnprinsipper for IKT-sikkerhet (v2.0)', icon: ShieldCheck },
+    { id: 'nsm', title: 'NSM Grunnprinsipper', badge: 'NO', description: 'Nasjonalt sikkerhetsorgans grunnprinsipper for IKT-sikkerhet (v2.1)', icon: ShieldCheck },
     { id: 'nist', title: 'NIST CSF 2.0', badge: 'US', description: 'Cybersecurity Framework 2.0 (Govern, Identify, Protect, Detect, Respond, Recover)', icon: Cpu },
     { id: 'soc2', title: 'SOC 2 Type II', badge: 'AICPA', description: 'Trust Services Criteria for SaaS og skytjenester', icon: Award },
     { id: 'dora', title: 'DORA', badge: 'EU', description: 'Digital Operational Resilience Act for finans og IKT-leverandører', icon: Activity },
@@ -90,7 +90,7 @@ function App() {
     const [activeTab, setActiveTab] = useState<Tab>('controls');
     const [theme, setTheme] = useState<Theme>(getInitialTheme);
     const { state, setCompanyName } = useAssessmentStore();
-    const { lang, setLang, t } = useLang();
+    const { lang, t } = useLang();
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
@@ -293,31 +293,12 @@ function App() {
                         />
                     </div>
 
-                    {/* Language and Theme Selectors */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
-                        {/* Theme Switcher */}
+                    {/* Theme Switcher */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: '4px' }}>
                         <button className="theme-toggle" onClick={toggleTheme}
                             title={theme === 'dark' ? 'Bytt til lys modus' : 'Bytt til mørk modus'}>
                             {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
                         </button>
-
-                        {/* Language Selection */}
-                        <div style={{ display: 'flex', gap: '2px', background: 'var(--bg-tertiary)', borderRadius: '6px', padding: '2px', border: '1px solid var(--border)' }}>
-                            <button onClick={() => setLang('nb')} title="Bokmål" style={{
-                                padding: '4px 8px', border: 'none', borderRadius: '4px', cursor: 'pointer',
-                                fontSize: '11px', fontWeight: 600, lineHeight: 1, fontFamily: 'var(--font-main)',
-                                background: lang === 'nb' ? 'var(--bg-secondary)' : 'transparent',
-                                color: lang === 'nb' ? 'var(--text-primary)' : 'var(--text-muted)',
-                                opacity: lang === 'nb' ? 1 : 0.6, transition: 'all 0.15s ease',
-                            }}>BM</button>
-                            <button onClick={() => setLang('nn')} title="Nynorsk" style={{
-                                padding: '4px 8px', border: 'none', borderRadius: '4px', cursor: 'pointer',
-                                fontSize: '11px', fontWeight: 600, lineHeight: 1, fontFamily: 'var(--font-main)',
-                                background: lang === 'nn' ? 'var(--bg-secondary)' : 'transparent',
-                                color: lang === 'nn' ? 'var(--text-primary)' : 'var(--text-muted)',
-                                opacity: lang === 'nn' ? 1 : 0.6, transition: 'all 0.15s ease',
-                            }}>NN</button>
-                        </div>
                     </div>
                 </div>
             </aside>
@@ -337,7 +318,7 @@ function App() {
                         <h2 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {activeTab === 'overview' && t('nav.overview')}
                             {activeTab === 'controls' && t('controls.title')}
-                            {activeTab === 'nsm' && 'NSM Grunnprinsipper v2.0 (Nasjonalt sikkerhetsorgan)'}
+                            {activeTab === 'nsm' && 'NSM Grunnprinsipper v2.1 (Nasjonalt sikkerhetsorgan)'}
                             {activeTab === 'nist' && 'NIST Cybersecurity Framework 2.0 (NIST CSF)'}
                             {activeTab === 'soc2' && 'SOC 2 Type II (Trust Services Criteria)'}
                             {activeTab === 'dora' && 'DORA (Digital Operational Resilience Act)'}

@@ -593,28 +593,27 @@ const noTranslations: Record<string, ControlTranslation> = {
 };
 
 export function getControlTranslation(controlId: string, _lang: Lang) {
-    // Both nb and nn use the same Norwegian control translations
     return noTranslations[controlId] || null;
 }
 
 export const domainTranslations: Record<string, Record<Lang, string>> = {
-    'Organizational controls': { nb: 'Organisatoriske kontroller', nn: 'Organisatoriske kontrollar' },
-    'People controls': { nb: 'Personellkontroller', nn: 'Personellkontrollar' },
-    'Physical controls': { nb: 'Fysiske kontroller', nn: 'Fysiske kontrollar' },
-    'Technological controls': { nb: 'Teknologiske kontroller', nn: 'Teknologiske kontrollar' },
+    'Organizational controls': { nb: 'Organisatoriske kontroller' },
+    'People controls': { nb: 'Personellkontroller' },
+    'Physical controls': { nb: 'Fysiske kontroller' },
+    'Technological controls': { nb: 'Teknologiske kontroller' },
 };
 
 export const domainShortTranslations: Record<string, Record<Lang, string>> = {
-    'Organizational controls': { nb: 'Organisatorisk', nn: 'Organisatorisk' },
-    'People controls': { nb: 'Personell', nn: 'Personell' },
-    'Physical controls': { nb: 'Fysisk', nn: 'Fysisk' },
-    'Technological controls': { nb: 'Teknologisk', nn: 'Teknologisk' },
+    'Organizational controls': { nb: 'Organisatorisk' },
+    'People controls': { nb: 'Personell' },
+    'Physical controls': { nb: 'Fysisk' },
+    'Technological controls': { nb: 'Teknologisk' },
 };
 
 export const statusTranslations: Record<string, Record<Lang, string>> = {
-    'Not Started': { nb: 'Ikke startet', nn: 'Ikkje starta' },
-    'Planning': { nb: 'Planlegging', nn: 'Planlegging' },
-    'In Progress': { nb: 'Under arbeid', nn: 'Under arbeid' },
-    'Implemented': { nb: 'Implementert', nn: 'Implementert' },
-    'Not Applicable': { nb: 'Ikke aktuelt', nn: 'Ikkje aktuelt' },
+    'Not Started': { nb: 'Ikke startet' },
+    'Planning': { nb: 'Planlegging' },
+    'In Progress': { nb: 'Under arbeid' },
+    'Implemented': { nb: 'Implementert' },
+    'Not Applicable': { nb: 'Ikke aktuelt' },
 };

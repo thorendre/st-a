@@ -18,9 +18,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-GV.OC',
         domain: '1. GV: Styre (Govern)',
         title: 'Organisasjonskontekst og sikkerhetsmål (GV.OC)',
-        titleNo: 'Organisasjonskontekst og tryggleiksmål (GV.OC)',
+        titleNo: 'Organisasjonskontekst og sikkerhetsmål (GV.OC)',
         description: 'Virksomhetens oppdrag, regulatoriske forpliktelser, interessenter og sikkerhetsmål er forstått, dokumentert og lagt til grunn for cybersikkerhetsarbeidet.',
-        descriptionNo: 'Verksemdas oppdrag, regulatoriske plikter og tryggleiksmål er dokumenterte og lagde til grunn.',
+        descriptionNo: 'Virksomhetens oppdrag, regulatoriske forpliktelser, interessenter og sikkerhetsmål er forstått, dokumentert og lagt til grunn for cybersikkerhetsarbeidet.',
         guidance: [
             {
                 id: 'NIST-GV.OC-1',
@@ -42,7 +42,7 @@ export const nistControls: RegulationControl[] = [
         title: 'Risikostyringsstrategi og risikovilje (GV.RM)',
         titleNo: 'Risikostyringsstrategi og risikovilje (GV.RM)',
         description: 'Virksomhetens risikotoleranse og rammeverk for risikostyring er formelt etablert og godkjent av toppledelsen.',
-        descriptionNo: 'Verksemdas risikotoleranse og rammeverk for risikostyring er formelt etablert og godkjent.',
+        descriptionNo: 'Virksomhetens risikotoleranse og rammeverk for risikostyring er formelt etablert og godkjent av toppledelsen.',
         guidance: [
             {
                 id: 'NIST-GV.RM-1',
@@ -62,9 +62,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-GV.RR',
         domain: '1. GV: Styre (Govern)',
         title: 'Roller, ansvar og lederforankring (GV.RR)',
-        titleNo: 'Roller, ansvar og leiarforankring (GV.RR)',
+        titleNo: 'Roller, ansvar og lederforankring (GV.RR)',
         description: 'Roller og myndighet for cybersikkerhet er definert, tildelt og kommunisert på tvers av hele organisasjonen.',
-        descriptionNo: 'Roller og mynde for cybersikkerheit er definerte, tildelte og kommuniserte i organisasjonen.',
+        descriptionNo: 'Roller og myndighet for cybersikkerhet er definert, tildelt og kommunisert på tvers av hele organisasjonen.',
         guidance: [
             {
                 id: 'NIST-GV.RR-1',
@@ -84,9 +84,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-GV.SC',
         domain: '1. GV: Styre (Govern)',
         title: 'Leverandørsikkerhet og Supply Chain (GV.SC)',
-        titleNo: 'Leverandørtryggleik og Supply Chain (GV.SC)',
+        titleNo: 'Leverandørsikkerhet og Supply Chain (GV.SC)',
         description: 'Cybersikkerhetsrisiko i forsyningskjeden (C-SCRM) identifiseres, overvåkes og håndteres gjennom hele leverandørens livssyklus.',
-        descriptionNo: 'Cybersikkerheitsrisiko i forsyningskjeda vert identifisert, overvaka og handtert.',
+        descriptionNo: 'Cybersikkerhetsrisiko i forsyningskjeden identifiseres, overvåkes og håndteres systematisk.',
         guidance: [
             {
                 id: 'NIST-GV.SC-1',
@@ -110,9 +110,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-ID.AM',
         domain: '2. ID: Identifisere (Identify)',
         title: 'Kartlegging av fysiske og logiske verdier (ID.AM)',
-        titleNo: 'Kartlegging av fysiske og logiske verdiar (ID.AM)',
+        titleNo: 'Kartlegging av fysiske og logiske verdier (ID.AM)',
         description: 'Maskinvare, programvare, nettverkskomponenter, skytjenester og sensitive datamengder er fullstendig kartlagt i et oppdatert inventar.',
-        descriptionNo: 'Maskinvare, programvare, skytjenester og sensitive datamengder er kartlagde.',
+        descriptionNo: 'Maskinvare, programvare, nettverkskomponenter, skytjenester og sensitive datamengder er kartlagt i et oppdatert inventar.',
         guidance: [
             {
                 id: 'NIST-ID.AM-1',
@@ -132,9 +132,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-ID.RA',
         domain: '2. ID: Identifisere (Identify)',
         title: 'Sårbarhets- og trusselvurdering (ID.RA)',
-        titleNo: 'Sårbarheits- og trusselvurdering (ID.RA)',
+        titleNo: 'Sårbarhets- og trusselvurdering (ID.RA)',
         description: 'Trusler og sårbarheter i systemer og infrastruktur identifiseres systematisk for å avdekke cybersikkerhetsrisiko.',
-        descriptionNo: 'Truslar og sårbarheiter i system og infrastruktur vert identifiserte systematisk.',
+        descriptionNo: 'Trusler og sårbarheter i systemer og infrastruktur identifiseres systematisk for å avdekke cybersikkerhetsrisiko.',
         guidance: [
             {
                 id: 'NIST-ID.RA-1',
@@ -160,7 +160,7 @@ export const nistControls: RegulationControl[] = [
         title: 'Identitetsstyring og tilgangskontroll (PR.AA)',
         titleNo: 'Identitetsstyring og tilgangskontroll (PR.AA)',
         description: 'Brukere, enheter og prosesser autentiseres sikkert med minste privilegiums prinsipp og obligatorisk MFA.',
-        descriptionNo: 'Brukarar, einingar og prosessar vert autentiserte trygt med minste privilegium og MFA.',
+        descriptionNo: 'Brukere, enheter og prosesser autentiseres sikkert med minste privilegiums prinsipp og obligatorisk MFA.',
         guidance: [
             {
                 id: 'NIST-PR.AA-1',
@@ -180,9 +180,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-PR.AT',
         domain: '3. PR: Beskytte (Protect)',
         title: 'Sikkerhetsbevissthet og opplæring (PR.AT)',
-        titleNo: 'Sikkerheitsmedvit og opplæring (PR.AT)',
+        titleNo: 'Sikkerhetsbevissthet og opplæring (PR.AT)',
         description: 'Alle ansatte og oppdragstakere mottar jevnlig opplæring i cybersikkerhet, inkludert gjenkjenning av sosial manipulering.',
-        descriptionNo: 'Alle tilsette får regelmessig opplæring i cybersikkerheit og sosial manipulering.',
+        descriptionNo: 'Alle ansatte og oppdragstakere mottar jevnlig opplæring i cybersikkerhet, inkludert gjenkjenning av sosial manipulering.',
         guidance: [
             {
                 id: 'NIST-PR.AT-1',
@@ -202,9 +202,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-PR.DS',
         domain: '3. PR: Beskytte (Protect)',
         title: 'Datasikkerhet og kryptering (PR.DS)',
-        titleNo: 'Datasikkerheit og kryptering (PR.DS)',
+        titleNo: 'Datasikkerhet og kryptering (PR.DS)',
         description: 'Data i ro og under overføring er beskyttet med industristandard kryptering (f.eks. AES-256 og TLS 1.3).',
-        descriptionNo: 'Data i ro og under overføring er verna med sterk kryptering.',
+        descriptionNo: 'Data i ro og under overføring er beskyttet med industristandard kryptering (f.eks. AES-256 og TLS 1.3).',
         guidance: [
             {
                 id: 'NIST-PR.DS-1',
@@ -224,9 +224,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-PR.PS',
         domain: '3. PR: Beskytte (Protect)',
         title: 'Plattformsikkerhet og herding (PR.PS)',
-        titleNo: 'Plattformsikkerheit og herding (PR.PS)',
+        titleNo: 'Plattformsikkerhet og herding (PR.PS)',
         description: 'Konfigurasjon av maskinvare, operativsystemer og programvare herdes etter anerkjente sikkerhetsstandarder (f.eks. CIS Benchmarks).',
-        descriptionNo: 'Konfigurasjon av maskinvare og programvare vert herda etter anerkjende standardar.',
+        descriptionNo: 'Konfigurasjon av maskinvare, operativsystemer og programvare herdes etter anerkjente sikkerhetsstandarder (f.eks. CIS Benchmarks).',
         guidance: [
             {
                 id: 'NIST-PR.PS-1',
@@ -250,9 +250,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-DE.CM',
         domain: '4. DE: Oppdage (Detect)',
         title: 'Kontinuerlig sikkerhetsovervåking (DE.CM)',
-        titleNo: 'Kontinuerleg tryggleiksovervaking (DE.CM)',
+        titleNo: 'Kontinuerlig sikkerhetsovervåking (DE.CM)',
         description: 'Nettverk, enheter, identiteter og applikasjoner overvåkes kontinuerlig for å identifisere potensielle sikkerhetshendelser.',
-        descriptionNo: 'Nettverk, einingar og applikasjonar vert overvaka kontinuerleg.',
+        descriptionNo: 'Nettverk, enheter, identiteter og applikasjoner overvåkes kontinuerlig for å identifisere potensielle sikkerhetshendelser.',
         guidance: [
             {
                 id: 'NIST-DE.CM-1',
@@ -274,7 +274,7 @@ export const nistControls: RegulationControl[] = [
         title: 'Avviks- og trusseldeteksjon (DE.AE)',
         titleNo: 'Avviks- og trusseldeteksjon (DE.AE)',
         description: 'Uvanlig eller mistenkelig aktivitet analyseres og aggregeres raskt for å avdekke pågående angrep.',
-        descriptionNo: 'Uvanleg aktivitet vert analysert for å avdekkje pågåande angrep.',
+        descriptionNo: 'Uvanlig eller mistenkelig aktivitet analyseres og aggregeres raskt for å avdekke pågående angrep.',
         guidance: [
             {
                 id: 'NIST-DE.AE-1',
@@ -292,9 +292,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-RS.MA',
         domain: '5. RS: Respondere (Respond)',
         title: 'Hendelseshåndteringsplan og styring (RS.MA)',
-        titleNo: 'Hendingshandteringsplan og styring (RS.MA)',
+        titleNo: 'Hendelseshåndteringsplan og styring (RS.MA)',
         description: 'En formell beredskapsplan for cybersikkerhetshendelser (Incident Response Plan) er etablert, godkjent og vedlikeholdt.',
-        descriptionNo: 'Ein formell beredskapsplan for hendingar er etablert og godkjent.',
+        descriptionNo: 'En formell beredskapsplan for cybersikkerhetshendelser (Incident Response Plan) er etablert, godkjent og vedlikeholdt.',
         guidance: [
             {
                 id: 'NIST-RS.MA-1',
@@ -314,9 +314,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-RS.MI',
         domain: '5. RS: Respondere (Respond)',
         title: 'Inndemming og avbøtende tiltak (RS.MI)',
-        titleNo: 'Inndemming og avbøtande tiltak (RS.MI)',
+        titleNo: 'Inndemming og avbøtende tiltak (RS.MI)',
         description: 'Aktiviteter utføres umiddelbart for å forhindre spredning av et angrep og redusere skadeomfanget.',
-        descriptionNo: 'Tiltak vert sette i verk for å hindre spreiing av eit angrep.',
+        descriptionNo: 'Aktiviteter utføres umiddelbart for å forhindre spredning av et angrep og redusere skadeomfanget.',
         guidance: [
             {
                 id: 'NIST-RS.MI-1',
@@ -334,9 +334,9 @@ export const nistControls: RegulationControl[] = [
         id: 'NIST-RC.RP',
         domain: '6. RC: Gjenopprette (Recover)',
         title: 'Gjenoppretting og kontinuitetsplaner (RC.RP)',
-        titleNo: 'Attreising og kontinuitetsplanar (RC.RP)',
+        titleNo: 'Gjenoppretting og kontinuitetsplaner (RC.RP)',
         description: 'Gjenopprettingsprosesser og -systemer vedlikeholdes for å sikre rettidig tilbakeføring til normal drift etter en hendelse.',
-        descriptionNo: 'Attreisingsprosessar vert vedlikehaldne for å sikre rask retur til normal drift.',
+        descriptionNo: 'Gjenopprettingsprosesser og -systemer vedlikeholdes for å sikre rettidig tilbakeføring til normal drift etter en hendelse.',
         guidance: [
             {
                 id: 'NIST-RC.RP-1',
@@ -355,10 +355,10 @@ export const nistControls: RegulationControl[] = [
 ];
 
 export const nistDomainTranslations: Record<string, Record<Lang, string>> = {
-    '1. GV: Styre (Govern)': { nb: '1. GV: Styre (Govern)', nn: '1. GV: Styre (Govern)' },
-    '2. ID: Identifisere (Identify)': { nb: '2. ID: Identifisere (Identify)', nn: '2. ID: Identifisere (Identify)' },
-    '3. PR: Beskytte (Protect)': { nb: '3. PR: Beskytte (Protect)', nn: '3. PR: Beskytte (Protect)' },
-    '4. DE: Oppdage (Detect)': { nb: '4. DE: Oppdage (Detect)', nn: '4. DE: Oppdage (Detect)' },
-    '5. RS: Respondere (Respond)': { nb: '5. RS: Respondere (Respond)', nn: '5. RS: Respondere (Respond)' },
-    '6. RC: Gjenopprette (Recover)': { nb: '6. RC: Gjenopprette (Recover)', nn: '6. RC: Attreise (Recover)' },
+    '1. GV: Styre (Govern)': { nb: '1. GV: Styre (Govern)' },
+    '2. ID: Identifisere (Identify)': { nb: '2. ID: Identifisere (Identify)' },
+    '3. PR: Beskytte (Protect)': { nb: '3. PR: Beskytte (Protect)' },
+    '4. DE: Oppdage (Detect)': { nb: '4. DE: Oppdage (Detect)' },
+    '5. RS: Respondere (Respond)': { nb: '5. RS: Respondere (Respond)' },
+    '6. RC: Gjenopprette (Recover)': { nb: '6. RC: Gjenopprette (Recover)' },
 };

@@ -307,10 +307,10 @@ export const doraControls: RegulationControl[] = [
 ];
 
 export const doraDomainTranslations: Record<string, Record<import('../hooks/useLang').Lang, string>> = {
-    'ICT Risk Management': { nb: 'IKT-risikostyring', nn: 'IKT-risikostyring' },
-    'Incident Management': { nb: 'Hendelseshåndtering', nn: 'Hendingshandtering' },
-    'Resilience Testing': { nb: 'Motstandskraftstesting', nn: 'Motstandskraftstesting' },
-    'Third-Party Risk': { nb: 'Tredjepartsrisiko', nn: 'Tredjepartsrisiko' },
-    'Information Sharing': { nb: 'Informasjonsdeling', nn: 'Informasjonsdeling' },
-    'Governance': { nb: 'Styring', nn: 'Styring' },
+    'ICT Risk Management': { nb: 'IKT-risikostyring' },
+    'Incident Management': { nb: 'Hendelseshåndtering' },
+    'Resilience Testing': { nb: 'Motstandskraftstesting' },
+    'Third-Party Risk': { nb: 'Tredjepartsrisiko' },
+    'Information Sharing': { nb: 'Informasjonsdeling' },
+    'Governance': { nb: 'Styring' },
 };

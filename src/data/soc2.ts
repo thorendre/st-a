@@ -17,9 +17,9 @@ export const soc2Controls: RegulationControl[] = [
         id: 'SOC2-CC1.1',
         domain: '1. CC: Sikkerhet (Security / Common Criteria)',
         title: 'Integritet, etiske retningslinjer og ledelsesansvar (CC1.1)',
-        titleNo: 'Integritet, etiske retningslinjer og leiaransvar (CC1.1)',
+        titleNo: 'Integritet, etiske retningslinjer og ledelsesansvar (CC1.1)',
         description: 'Organisasjonen demonstrerer forpliktelse til integritet og etiske verdier gjennom dokumenterte retningslinjer og styreoppfølging.',
-        descriptionNo: 'Organisasjonen demonstrerer plikt til integritet og etiske verdiar gjennom dokumenterte retningslinjer.',
+        descriptionNo: 'Organisasjonen demonstrerer forpliktelse til integritet og etiske verdier gjennom dokumenterte retningslinjer og styreoppfølging.',
         guidance: [
             {
                 id: 'SOC2-CC1.1-1',
@@ -41,7 +41,7 @@ export const soc2Controls: RegulationControl[] = [
         title: 'Risikovurdering og trusselkartlegging (CC3.2)',
         titleNo: 'Risikovurdering og trusselkartlegging (CC3.2)',
         description: 'Organisasjonen identifiserer og vurderer cybersikkerhetsrisiko knyttet til mål og systemintegritet minst årlig.',
-        descriptionNo: 'Organisasjonen identifiserer og vurderer cybersikkerheitsrisiko minst årleg.',
+        descriptionNo: 'Organisasjonen identifiserer og vurderer cybersikkerhetsrisiko knyttet til mål og systemintegritet minst årlig.',
         guidance: [
             {
                 id: 'SOC2-CC3.2-1',
@@ -57,7 +57,7 @@ export const soc2Controls: RegulationControl[] = [
         title: 'Logisk tilgangsstyring og RBAC (CC6.1)',
         titleNo: 'Logisk tilgangsstyring og RBAC (CC6.1)',
         description: 'Tilgang til systemer og produksjonsdata begrenses basert på godkjente roller (Role-Based Access Control) og forretningsbehov.',
-        descriptionNo: 'Tilgang til system og produksjonsdata vert avgrensa basert på roller og forretningsbehov.',
+        descriptionNo: 'Tilgang til systemer og produksjonsdata begrenses basert på godkjente roller (Role-Based Access Control) og forretningsbehov.',
         guidance: [
             {
                 id: 'SOC2-CC6.1-1',
@@ -77,9 +77,9 @@ export const soc2Controls: RegulationControl[] = [
         id: 'SOC2-CC6.6',
         domain: '1. CC: Sikkerhet (Security / Common Criteria)',
         title: 'Nettverkssikkerhet og perimetersikring (CC6.6)',
-        titleNo: 'Nettverkstryggleik og perimetersikring (CC6.6)',
+        titleNo: 'Nettverkssikkerhet og perimetersikring (CC6.6)',
         description: 'Grensesnitt mot offentlige nettverk og interne soner beskyttes med brannmurer, WAF og mikrosegmentering.',
-        descriptionNo: 'Grensesnitt mot offentlege nettverk vert verna med brannmurar og segmentering.',
+        descriptionNo: 'Grensesnitt mot offentlige nettverk og interne soner beskyttes med brannmurer, WAF og mikrosegmentering.',
         guidance: [
             {
                 id: 'SOC2-CC6.6-1',
@@ -99,9 +99,9 @@ export const soc2Controls: RegulationControl[] = [
         id: 'SOC2-CC6.8',
         domain: '1. CC: Sikkerhet (Security / Common Criteria)',
         title: 'Beskyttelse mot ondsinnet kode og sårbarheter (CC6.8)',
-        titleNo: 'Vern mot vondsinna kode og sårbarheiter (CC6.8)',
+        titleNo: 'Beskyttelse mot ondsinnet kode og sårbarheter (CC6.8)',
         description: 'Endepunkter og servere beskyttes med antimalware/EDR, og sårbarheter oppdages og utbedres kontinuerlig.',
-        descriptionNo: 'Endepunkt og servere vert verna med antimalware og kontinuerlege oppdateringar.',
+        descriptionNo: 'Endepunkter og servere beskyttes med antimalware/EDR, og sårbarheter oppdages og utbedres kontinuerlig.',
         guidance: [
             {
                 id: 'SOC2-CC6.8-1',
@@ -121,9 +121,9 @@ export const soc2Controls: RegulationControl[] = [
         id: 'SOC2-CC7.1',
         domain: '1. CC: Sikkerhet (Security / Common Criteria)',
         title: 'Sikkerhetsovervåking og hendelseshåndtering (CC7.1)',
-        titleNo: 'Sikkerheitsovervaking og hendingshandtering (CC7.1)',
+        titleNo: 'Sikkerhetsovervåking og hendelseshåndtering (CC7.1)',
         description: 'Systemet overvåkes kontinuerlig for uautorisert aktivitet, og avvik behandles etter en etablert hendelsesprosedyre.',
-        descriptionNo: 'Systemet vert overvaka kontinuerleg og avvik vert behandla etter faste prosedyrar.',
+        descriptionNo: 'Systemet overvåkes kontinuerlig for uautorisert aktivitet, og avvik behandles etter en etablert hendelsesprosedyre.',
         guidance: [
             {
                 id: 'SOC2-CC7.1-1',
@@ -142,22 +142,22 @@ export const soc2Controls: RegulationControl[] = [
     {
         id: 'SOC2-CC8.1',
         domain: '1. CC: Sikkerhet (Security / Common Criteria)',
-        title: 'Endringshåndtering og kodekvalitet (CC8.1)',
-        titleNo: 'Endringshandtering og kodekvalitet (CC8.1)',
-        description: 'Endringer i infrastruktur og applikasjonskode godkjennes, testes og dokumenteres før produksjonssetting.',
-        descriptionNo: 'Endringar i infrastruktur og kode vert godkjende og testa før produksjon.',
+        title: 'Endringshåndtering og CI/CD godkjenning (CC8.1)',
+        titleNo: 'Endringshåndtering og CI/CD godkjenning (CC8.1)',
+        description: 'Endringer i infrastruktur og kode testes, godkjennes av en uavhengig person (Peer Review) og dokumenteres før produksjonssetting.',
+        descriptionNo: 'Endringer i infrastruktur og kode testes, godkjennes av en uavhengig person (Peer Review) og dokumenteres før produksjonssetting.',
         guidance: [
             {
                 id: 'SOC2-CC8.1-1',
-                title: 'Obligatorisk fagfellevurdering (Peer Review / Pull Request)',
-                description: 'Krev at minst én annen utvikler godkjenner koden via Pull Request før fletting til hovedgren.',
-                auditEvidence: 'Branch Protection-innstillinger i GitHub/GitLab som håndhever godkjenning.'
+                title: 'Pull Request Branch Protection og to-personers kontroll',
+                description: 'Blokker direkte commits til main/prod-brancher; krev minst én uavhengig kodegodkjenning før merge.',
+                auditEvidence: 'GitHub/GitLab branch protection regler som håndhever obligatorisk godkjenning.'
             },
             {
                 id: 'SOC2-CC8.1-2',
                 title: 'Automatisert bygg og utrulling (CI/CD)',
-                description: 'Bruk automatiserte tester i pipeline; hindre manuelle endringer direkte i produksjonsmiljøet.',
-                auditEvidence: 'Pipeline-historikk og logg som bekrefter at deploy kun skjer via godkjent CI/CD.'
+                description: 'Håndhev at all kode deployes via automatiserte pipelines uten manuell innblanding på produksjonsservere.',
+                auditEvidence: 'CI/CD pipeline-definisjoner (f.eks. GitHub Actions YAML) og deploylogger.'
             }
         ]
     },
@@ -168,15 +168,15 @@ export const soc2Controls: RegulationControl[] = [
     {
         id: 'SOC2-A1.1',
         domain: '2. A: Tilgjengelighet (Availability)',
-        title: 'Ytelsesovervåking og SLA-oppfølging (A1.1)',
-        titleNo: 'Ytingskontroll og SLA-oppfølging (A1.1)',
-        description: 'Systemoppetid og ytelse overvåkes kontinuerlig for å sikre at avtalte servicenivåer (SLA) oppfylles.',
-        descriptionNo: 'Systemoppetid vert overvaka kontinuerleg for å sikre at SLA vert oppfylt.',
+        title: 'Kapasitetsstyring og oppetidsovervåking (A1.1)',
+        titleNo: 'Kapasitetsstyring og oppetidsovervåking (A1.1)',
+        description: 'Systemytelse og kapasitet overvåkes kontinuerlig for å sikre at avtalt servicenivå (SLA) opprettholdes.',
+        descriptionNo: 'Systemytelse og kapasitet overvåkes kontinuerlig for å sikre at avtalt servicenivå (SLA) opprettholdes.',
         guidance: [
             {
                 id: 'SOC2-A1.1-1',
-                title: 'Ekstern oppetidsovervåking (Synthetic Monitoring)',
-                description: 'Bruk eksterne helsesjekker som tester systemets nøkkelendepunkter hvert minutt med varsling ved nedetid.',
+                title: 'Syntetisk overvåking og varsling av nedetid',
+                description: 'Konfigurer eksterne helsesjekker som tester systemets nøkkelfunksjoner hvert minutt og varsler ved brudd.',
                 auditEvidence: 'Uptime-rapporter (f.eks. Pingdom, Datadog) som viser historisk oppetid mot SLA.'
             }
         ]
@@ -185,9 +185,9 @@ export const soc2Controls: RegulationControl[] = [
         id: 'SOC2-A1.2',
         domain: '2. A: Tilgjengelighet (Availability)',
         title: 'Sikkerhetskopiering og Disaster Recovery (A1.2)',
-        titleNo: 'Tryggleikskopiering og Disaster Recovery (A1.2)',
+        titleNo: 'Sikkerhetskopiering og Disaster Recovery (A1.2)',
         description: 'Data sikkerhetskopieres regelmessig, krypteres og testes for gjenoppretting i henhold til RTO og RPO.',
-        descriptionNo: 'Data vert kopierte regelmessig, krypteres og testast for attreising.',
+        descriptionNo: 'Data sikkerhetskopieres regelmessig, krypteres og testes for gjenoppretting i henhold til RTO og RPO.',
         guidance: [
             {
                 id: 'SOC2-A1.2-1',
@@ -211,9 +211,9 @@ export const soc2Controls: RegulationControl[] = [
         id: 'SOC2-PI1.1',
         domain: '3. PI: Behandlingsintegritet (Processing Integrity)',
         title: 'Datavalidering og feilhåndtering i systemet (PI1.1)',
-        titleNo: 'Datavalidering og feilhandtering i systemet (PI1.1)',
+        titleNo: 'Datavalidering og feilhåndtering i systemet (PI1.1)',
         description: 'Systembehandling er fullstendig, nøyaktig og tidsriktig; inndata og utdata valideres for å forhindre datakorrupsjon.',
-        descriptionNo: 'Systembehandling er fullstendig og nøyaktig; inndata vert validerte.',
+        descriptionNo: 'Systembehandling er fullstendig, nøyaktig og tidsriktig; inndata og utdata valideres for å forhindre datakorrupsjon.',
         guidance: [
             {
                 id: 'SOC2-PI1.1-1',
@@ -237,9 +237,9 @@ export const soc2Controls: RegulationControl[] = [
         id: 'SOC2-C1.1',
         domain: '4. C: Konfidensialitet (Confidentiality)',
         title: 'Kryptering og hemmelighetshåndtering (C1.1)',
-        titleNo: 'Kryptering og løyndomshandtering (C1.1)',
+        titleNo: 'Kryptering og hemmelighetshåndtering (C1.1)',
         description: 'Konfidensiell informasjon er beskyttet mot uautorisert innsyn gjennom hele livssyklusen med sterk kryptering.',
-        descriptionNo: 'Konfidensiell informasjon er verna mot uautorisert innsyn med sterk kryptering.',
+        descriptionNo: 'Konfidensiell informasjon er beskyttet mot uautorisert innsyn gjennom hele livssyklusen med sterk kryptering.',
         guidance: [
             {
                 id: 'SOC2-C1.1-1',
@@ -263,9 +263,9 @@ export const soc2Controls: RegulationControl[] = [
         id: 'SOC2-P1.1',
         domain: '5. P: Personvern (Privacy)',
         title: 'Personvernerklæring og formålsbegrensning (P1.1)',
-        titleNo: 'Personvernerklæring og formålsavgrensing (P1.1)',
+        titleNo: 'Personvernerklæring og formålsbegrensning (P1.1)',
         description: 'Organisasjonen informerer registrerte om hvilke personopplysninger som samles inn, formålet og hvordan rettigheter ivaretas.',
-        descriptionNo: 'Organisasjonen informerer registrerte om kva personopplysningar som vert samla inn og formålet.',
+        descriptionNo: 'Organisasjonen informerer registrerte om hvilke personopplysninger som samles inn, formålet og hvordan rettigheter ivaretas.',
         guidance: [
             {
                 id: 'SOC2-P1.1-1',
@@ -284,9 +284,9 @@ export const soc2Controls: RegulationControl[] = [
 ];
 
 export const soc2DomainTranslations: Record<string, Record<Lang, string>> = {
-    '1. CC: Sikkerhet (Security / Common Criteria)': { nb: '1. CC: Sikkerhet (Common Criteria)', nn: '1. CC: Sikkerheit (Common Criteria)' },
-    '2. A: Tilgjengelighet (Availability)': { nb: '2. A: Tilgjengelighet (Availability)', nn: '2. A: Tilgjengelegheit (Availability)' },
-    '3. PI: Behandlingsintegritet (Processing Integrity)': { nb: '3. PI: Behandlingsintegritet (Integrity)', nn: '3. PI: Behandlingsintegritet (Integrity)' },
-    '4. C: Konfidensialitet (Confidentiality)': { nb: '4. C: Konfidensialitet (Confidentiality)', nn: '4. C: Konfidensialitet (Confidentiality)' },
-    '5. P: Personvern (Privacy)': { nb: '5. P: Personvern (Privacy)', nn: '5. P: Personvern (Privacy)' },
+    '1. CC: Sikkerhet (Security / Common Criteria)': { nb: '1. CC: Sikkerhet (Common Criteria)' },
+    '2. A: Tilgjengelighet (Availability)': { nb: '2. A: Tilgjengelighet (Availability)' },
+    '3. PI: Behandlingsintegritet (Processing Integrity)': { nb: '3. PI: Behandlingsintegritet (Integrity)' },
+    '4. C: Konfidensialitet (Confidentiality)': { nb: '4. C: Konfidensialitet (Confidentiality)' },
+    '5. P: Personvern (Privacy)': { nb: '5. P: Personvern (Privacy)' },
 };

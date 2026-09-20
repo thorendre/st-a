@@ -287,14 +287,14 @@ export const nis2Controls: RegulationControl[] = [
 ];
 
 export const nis2DomainTranslations: Record<string, Record<import('../hooks/useLang').Lang, string>> = {
-    'Governance & Accountability': { nb: 'Styring og ansvar', nn: 'Styring og ansvar' },
-    'Risk Management Measures': { nb: 'Risikostyringstiltak', nn: 'Risikostyringstiltak' },
-    'Incident Reporting': { nb: 'Hendelsesrapportering', nn: 'Hendingsrapportering' },
-    'Supply Chain Security': { nb: 'Leverandørkjedesikkerhet', nn: 'Leverandørkjedetryggleik' },
-    'Business Continuity': { nb: 'Forretningskontinuitet', nn: 'Forretningskontinuitet' },
-    'Vulnerability Management': { nb: 'Sårbarhetshåndtering', nn: 'Sårbarheitshandtering' },
-    'Cybersecurity Training': { nb: 'Cybersikkerhetsopplæring', nn: 'Cybertryggingsopplæring' },
-    'Cryptography & Encryption': { nb: 'Kryptografi og kryptering', nn: 'Kryptografi og kryptering' },
-    'Access Control & Authentication': { nb: 'Tilgangskontroll og autentisering', nn: 'Tilgangskontroll og autentisering' },
-    'Asset Management': { nb: 'Verdihåndtering', nn: 'Verdihandtering' },
+    'Governance & Accountability': { nb: 'Styring og ansvar' },
+    'Risk Management Measures': { nb: 'Risikostyringstiltak' },
+    'Incident Reporting': { nb: 'Hendelsesrapportering' },
+    'Supply Chain Security': { nb: 'Leverandørkjedesikkerhet' },
+    'Business Continuity': { nb: 'Forretningskontinuitet' },
+    'Vulnerability Management': { nb: 'Sårbarhetshåndtering' },
+    'Cybersecurity Training': { nb: 'Cybersikkerhetsopplæring' },
+    'Cryptography & Encryption': { nb: 'Kryptografi og kryptering' },
+    'Access Control & Authentication': { nb: 'Tilgangskontroll og autentisering' },
+    'Asset Management': { nb: 'Verdihåndtering' },
 };

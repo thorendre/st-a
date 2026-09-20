@@ -18,17 +18,14 @@ import {
 
 const LIKELIHOOD_LABELS: Record<string, Record<Likelihood, string>> = {
     nb: { 1: 'Svært lav', 2: 'Lav', 3: 'Moderat', 4: 'Høy', 5: 'Svært høy' },
-    nn: { 1: 'Svært låg', 2: 'Låg', 3: 'Moderat', 4: 'Høg', 5: 'Svært høg' },
 };
 
 const CONSEQUENCE_LABELS: Record<string, Record<Consequence, string>> = {
     nb: { 1: 'Ubetydelig', 2: 'Lav', 3: 'Moderat', 4: 'Alvorlig', 5: 'Kritisk' },
-    nn: { 1: 'Ubetydeleg', 2: 'Låg', 3: 'Moderat', 4: 'Alvorleg', 5: 'Kritisk' },
 };
 
 const STATUS_LABELS: Record<string, Record<RiskStatus, string>> = {
     nb: { open: 'Åpen', mitigated: 'Mitigert', accepted: 'Akseptert', closed: 'Lukket' },
-    nn: { open: 'Open', mitigated: 'Mitigert', accepted: 'Akseptert', closed: 'Lukka' },
 };
 
 function getRiskColor(likelihood: number, consequence: number): string {
@@ -268,10 +265,7 @@ export function RiskPage() {
         return { total: filteredRisks.length, ...levels };
     }, [filteredRisks]);
 
-    const getCatName = (cat: RiskCategory) => {
-        if (lang === 'nn' && cat.nameNn) return cat.nameNn;
-        return cat.name;
-    };
+    const getCatName = (cat: RiskCategory) => cat.name;
 
     // ─── No project selected ───
     if (!activeProject) {
@@ -1504,8 +1498,8 @@ export function RiskPage() {
                 const activeBank = riskBanks.find(b => b.id === activeBankId);
                 const existingTitles = new Set(allRisks.map(r => r.title));
                 const availableEntries = activeBank?.entries.filter(e => !existingTitles.has(e.title)) || [];
-                const getBankName = (bank: RiskBank) => lang === 'nn' && bank.nameNn ? bank.nameNn : bank.name;
-                const getBankDesc = (bank: RiskBank) => lang === 'nn' && bank.descriptionNn ? bank.descriptionNn : bank.description;
+                const getBankName = (bank: RiskBank) => bank.name;
+                const getBankDesc = (bank: RiskBank) => bank.description;
 
                 return (
                     <div className="risk-modal-overlay" onClick={() => setShowBankModal(false)}>
