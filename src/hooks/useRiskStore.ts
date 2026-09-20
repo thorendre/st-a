@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { RiskProject, RiskCategory, Risk, RiskStore, Likelihood, Consequence } from '../types';
 import { defaultRiskCategories } from '../data/riskCategories';
+import { allPlatformBaselines, defaultSystemSpecificCategories } from '../data/platformBaselines';
 
 const STORAGE_KEY = 'staa_risk_store';
 
@@ -36,6 +37,11 @@ function normalizeRisk(r: any): Risk {
         plannedControls: r.plannedControls || '',
         owner: r.owner || '',
         status: r.status || 'open',
+        scope: r.scope || (r.categoryId?.includes('platform') || r.categoryId?.includes('cat-nsm') ? 'inherited_platform' : 'system_specific'),
+        inheritedFrom: r.inheritedFrom,
+        inheritedMitigationDetails: r.inheritedMitigationDetails,
+        jiraIssueKey: r.jiraIssueKey,
+        jiraStatus: r.jiraStatus,
     };
 }
 
@@ -68,21 +74,98 @@ export function useRiskStore() {
 
     // ─── Project CRUD ───
 
-    const createProject = (name: string, description: string, importDefaults: boolean = true, systemId?: string, jiraEpicKey?: string, jiraEpicUrl?: string) => {
+    const createProject = (
+        name: string,
+        description: string,
+        importDefaults: boolean = true,
+        systemId?: string,
+        jiraEpicKey?: string,
+        jiraEpicUrl?: string,
+        baselinePlatformId?: string
+    ) => {
         const id = generateId();
         const now = new Date().toISOString();
-        const categories: RiskCategory[] = importDefaults
-            ? defaultRiskCategories.map(c => ({
+        let categories: RiskCategory[] = [];
+        let baselinePlatformName: string | undefined = undefined;
+
+        if (baselinePlatformId && baselinePlatformId !== 'none') {
+            const foundPlatform = allPlatformBaselines.find(p => p.id === baselinePlatformId);
+            if (foundPlatform) {
+                baselinePlatformName = foundPlatform.name;
+                const platformCat: RiskCategory = {
+                    ...foundPlatform.category,
+                    id: `${foundPlatform.category.id}-${id}`,
+                    risks: foundPlatform.category.risks.map(r => ({
+                        ...r,
+                        id: `${r.id}-${id}`,
+                        categoryId: `${foundPlatform.category.id}-${id}`,
+                        scope: 'inherited_platform' as const,
+                        inheritedFrom: foundPlatform.name,
+                    }))
+                };
+                categories.push(platformCat);
+            } else {
+                const parentProject = store.projects.find(p => p.id === baselinePlatformId);
+                if (parentProject) {
+                    baselinePlatformName = parentProject.name;
+                    parentProject.categories.forEach(cat => {
+                        categories.push({
+                            ...cat,
+                            id: `inherited-${cat.id}-${id}`,
+                            name: `Arvet: ${cat.name}`,
+                            risks: cat.risks.map(r => ({
+                                ...r,
+                                id: `${r.id}-${id}`,
+                                categoryId: `inherited-${cat.id}-${id}`,
+                                scope: 'inherited_platform' as const,
+                                inheritedFrom: parentProject.name,
+                            }))
+                        });
+                    });
+                }
+            }
+
+            // Add system-specific categories
+            defaultSystemSpecificCategories.forEach(c => {
+                categories.push({
+                    ...c,
+                    id: `${c.id}-${id}`,
+                    risks: c.risks.map(r => ({
+                        ...r,
+                        id: `${r.id}-${id}`,
+                        categoryId: `${c.id}-${id}`,
+                        scope: 'system_specific' as const,
+                    }))
+                });
+            });
+        } else if (importDefaults) {
+            categories = defaultRiskCategories.map(c => ({
                 ...c,
                 id: `${c.id}-${id}`,
                 risks: c.risks.map(r => ({
                     ...r,
                     id: `${r.id}-${id}`,
                     categoryId: `${c.id}-${id}`,
+                    scope: c.id.includes('nsm') ? ('inherited_baseline' as const) : ('system_specific' as const),
                 })),
-            }))
-            : [];
-        const project: RiskProject = { id, name, description, systemId, jiraEpicKey, jiraEpicUrl, createdAt: now, updatedAt: now, categories };
+            }));
+        }
+
+        const project: RiskProject = {
+            id,
+            name,
+            description,
+            systemId,
+            jiraEpicKey,
+            jiraEpicUrl,
+            baselinePlatformId: baselinePlatformId && baselinePlatformId !== 'none' ? baselinePlatformId : undefined,
+            baselinePlatformName,
+            baselineFrameworksLinked: true,
+            createdAt: now,
+            updatedAt: now,
+            categories
+        };
+
         setStore(prev => ({
             ...prev,
             projects: [...prev.projects, project],
@@ -103,7 +186,7 @@ export function useRiskStore() {
         }));
     };
 
-    const updateProject = (id: string, updates: Partial<Pick<RiskProject, 'name' | 'description' | 'systemId' | 'jiraEpicKey' | 'jiraEpicUrl'>>) => {
+    const updateProject = (id: string, updates: Partial<Pick<RiskProject, 'name' | 'description' | 'systemId' | 'jiraEpicKey' | 'jiraEpicUrl' | 'baselinePlatformId' | 'baselinePlatformName' | 'baselineFrameworksLinked'>>) => {
         setStore(prev => ({
             ...prev,
             projects: prev.projects.map(p =>

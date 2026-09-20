@@ -31,7 +31,7 @@ export interface ControlAssessment {
     lastUpdated: string;
 }
 
-export type ModuleId = 'overview' | 'controls' | 'dora' | 'nis2' | 'risk' | 'systems' | 'privacy' | 'documents' | 'about';
+export type ModuleId = 'overview' | 'controls' | 'dora' | 'nis2' | 'nsm' | 'risk' | 'systems' | 'privacy' | 'documents' | 'about';
 export type ModuleConfig = Record<ModuleId, boolean>;
 
 export interface ProjectState {
@@ -114,6 +114,7 @@ export interface PersonvernVurdering {
 export type Likelihood = 1 | 2 | 3 | 4 | 5;
 export type Consequence = 1 | 2 | 3 | 4 | 5;
 export type RiskStatus = 'open' | 'mitigated' | 'accepted' | 'closed';
+export type RiskScope = 'system_specific' | 'inherited_platform' | 'inherited_baseline';
 
 export interface Risk {
     id: string;
@@ -136,6 +137,9 @@ export interface Risk {
     residualConsequence?: Consequence;
     jiraIssueKey?: string;
     jiraStatus?: string;
+    scope?: RiskScope;
+    inheritedFrom?: string;
+    inheritedMitigationDetails?: string;
 }
 
 export interface RiskCategory {
@@ -156,6 +160,9 @@ export interface RiskProject {
     systemId?: string; // Linked system ID
     jiraEpicKey?: string;
     jiraEpicUrl?: string;
+    baselinePlatformId?: string;
+    baselinePlatformName?: string;
+    baselineFrameworksLinked?: boolean;
     createdAt: string;
     updatedAt: string;
     categories: RiskCategory[];

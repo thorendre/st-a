@@ -4,10 +4,14 @@ import { useRiskStore } from '../hooks/useRiskStore';
 import { useAssessmentStore } from '../hooks/useAssessmentStore';
 import { Risk, Likelihood, Consequence, RiskStatus, RiskCategory, RiskProject } from '../types';
 import { defaultRiskCategories, riskBanks, RiskBank } from '../data/riskCategories';
+import { allPlatformBaselines } from '../data/platformBaselines';
+import { iso27001Controls } from '../data/iso27001';
+import { nsmControls } from '../data/nsm';
+import { nis2Controls } from '../data/nis2';
 import {
     Plus, Trash2, ChevronDown, ChevronRight, Edit3, Shield, AlertTriangle,
     FolderPlus, Eye, EyeOff, X, Check, ArrowRight, BookOpen, Database,
-    ExternalLink, RefreshCw
+    ExternalLink, RefreshCw, Layers, ShieldCheck, Zap
 } from 'lucide-react';
 
 const LIKELIHOOD_LABELS: Record<string, Record<Likelihood, string>> = {
@@ -166,6 +170,7 @@ const emptyRisk: Omit<Risk, 'id' | 'categoryId'> = {
     plannedControls: '',
     owner: '',
     status: 'open',
+    scope: 'system_specific',
 };
 
 export function RiskPage() {
@@ -183,9 +188,11 @@ export function RiskPage() {
     const [newProjectName, setNewProjectName] = useState('');
     const [newProjectDesc, setNewProjectDesc] = useState('');
     const [newProjectSystemId, setNewProjectSystemId] = useState('');
+    const [newProjectBaselinePlatform, setNewProjectBaselinePlatform] = useState<string>('platform-k8s');
     const [newProjectJira, setNewProjectJira] = useState(false);
     const [newProjectJiraKey, setNewProjectJiraKey] = useState('SEC');
     const [jiraSyncSuccess, setJiraSyncSuccess] = useState(false);
+    const [scopeFilter, setScopeFilter] = useState<'all' | 'system_specific' | 'inherited_platform'>('system_specific');
     const [editingProject, setEditingProject] = useState<RiskProject | null>(null);
     const [expandedRisk, setExpandedRisk] = useState<string | null>(null);
     const [editingRisk, setEditingRisk] = useState<(Omit<Risk, 'id' | 'categoryId'> & { categoryId?: string; id?: string }) | null>(null);
@@ -202,15 +209,37 @@ export function RiskPage() {
     const [selectedBankEntries, setSelectedBankEntries] = useState<Set<string>>(new Set());
     const [bankTargetCategory, setBankTargetCategory] = useState<string>('');
 
+    // Enterprise baseline live stats from ISMS assessments
+    const baselineStats = useMemo(() => {
+        const calcDone = (controls: { id: string }[]) => {
+            if (!controls.length) return 0;
+            const done = controls.filter(c => {
+                const s = state.assessments[c.id]?.status;
+                return s === 'Implemented' || s === 'Not Applicable';
+            }).length;
+            return Math.round((done / controls.length) * 100);
+        };
+        return {
+            isoPct: calcDone(iso27001Controls),
+            nsmPct: calcDone(nsmControls),
+            nis2Pct: calcDone(nis2Controls),
+        };
+    }, [state.assessments]);
+
     const allRisks = useMemo(() => getAllRisks(activeProject), [activeProject]);
+
+    const systemSpecificCount = useMemo(() => allRisks.filter(r => r.scope !== 'inherited_platform').length, [allRisks]);
+    const inheritedPlatformCount = useMemo(() => allRisks.filter(r => r.scope === 'inherited_platform').length, [allRisks]);
 
     const filteredRisks = useMemo(() => {
         return allRisks.filter(r => {
+            if (scopeFilter === 'system_specific' && r.scope === 'inherited_platform') return false;
+            if (scopeFilter === 'inherited_platform' && r.scope !== 'inherited_platform') return false;
             if (filterCategory !== 'all' && r.categoryId !== filterCategory) return false;
             if (filterStatus !== 'all' && r.status !== filterStatus) return false;
             return true;
         });
-    }, [allRisks, filterCategory, filterStatus]);
+    }, [allRisks, scopeFilter, filterCategory, filterStatus]);
 
     // Compute matrix data (Total Risk: Likelihood x Consequence)
     const matrixRisks = useMemo(() => {
@@ -338,6 +367,47 @@ export function RiskPage() {
                                 </div>
                             )}
 
+                            {/* Platform baseline selector */}
+                            <div>
+                                <label htmlFor="new-proj-platform" className="risk-label" style={{ marginBottom: '4px' }}>
+                                    Underliggende Plattform / Grunnlag (Arvet risikovurdering)
+                                </label>
+                                <select
+                                    id="new-proj-platform"
+                                    className="risk-input"
+                                    value={newProjectBaselinePlatform}
+                                    onChange={e => setNewProjectBaselinePlatform(e.target.value)}
+                                    style={{ width: '100%' }}
+                                >
+                                    {allPlatformBaselines.map(pb => (
+                                        <option key={pb.id} value={pb.id}>
+                                            {pb.platformType === 'kubernetes' ? '⚡ ' : pb.platformType === 'cloud' ? '☁️ ' : '🏢 '}
+                                            {pb.name}
+                                        </option>
+                                    ))}
+                                    {store.projects.length > 0 && (
+                                        <optgroup label="Bruk eksisterende risikoprosjekt som plattform">
+                                            {store.projects.map(p => (
+                                                <option key={p.id} value={p.id}>📁 {p.name}</option>
+                                            ))}
+                                        </optgroup>
+                                    )}
+                                    <option value="none">Frittstående (Ingen arvet plattform – standard sjekkliste)</option>
+                                </select>
+                                <div style={{
+                                    marginTop: '6px',
+                                    padding: '8px 10px',
+                                    background: 'rgba(16, 185, 129, 0.08)',
+                                    border: '1px solid rgba(16, 185, 129, 0.2)',
+                                    borderRadius: '6px',
+                                    fontSize: '11px',
+                                    color: 'var(--text-secondary)',
+                                    lineHeight: 1.4
+                                }}>
+                                    <strong style={{ color: 'var(--accent-teal)' }}>🛡️ Flerlags risikostyring:</strong> Plattformen ivaretar infrastruktur- og driftstiltak. <strong>ISO 27001, NIS2 og NSM Grunnprinsipper</strong> ivaretar virksomhetens baseline. Dette prosjektet fokuserer på <strong>systemspesifikk restrisiko</strong>.
+                                </div>
+                            </div>
+
                             <div>
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, color: '#2563eb' }}>
                                     <input
@@ -372,13 +442,21 @@ export function RiskPage() {
                                         if (newProjectName.trim()) {
                                             const epicKey = newProjectJira ? `${(newProjectJiraKey || 'SEC').toUpperCase().trim()}-${Math.floor(100 + Math.random() * 900)}` : undefined;
                                             const epicUrl = epicKey ? `https://jira.company.com/browse/${epicKey}` : undefined;
-                                            createProject(newProjectName.trim(), newProjectDesc.trim(), true, newProjectSystemId || undefined, epicKey, epicUrl);
-                                            setNewProjectName(''); setNewProjectDesc(''); setNewProjectSystemId(''); setNewProjectJira(false); setShowNewProject(false);
+                                            createProject(
+                                                newProjectName.trim(),
+                                                newProjectDesc.trim(),
+                                                newProjectBaselinePlatform === 'none',
+                                                newProjectSystemId || undefined,
+                                                epicKey,
+                                                epicUrl,
+                                                newProjectBaselinePlatform
+                                            );
+                                            setNewProjectName(''); setNewProjectDesc(''); setNewProjectSystemId(''); setNewProjectBaselinePlatform('platform-k8s'); setNewProjectJira(false); setShowNewProject(false);
                                         }
                                     }}>
                                     <Check size={14} /> {t('risk.create')}
                                 </button>
-                                <button className="risk-btn" onClick={() => { setShowNewProject(false); setNewProjectName(''); setNewProjectDesc(''); setNewProjectSystemId(''); setNewProjectJira(false); }}>
+                                <button className="risk-btn" onClick={() => { setShowNewProject(false); setNewProjectName(''); setNewProjectDesc(''); setNewProjectSystemId(''); setNewProjectBaselinePlatform('platform-k8s'); setNewProjectJira(false); }}>
                                     {t('risk.cancel')}
                                 </button>
                             </div>
@@ -419,6 +497,23 @@ export function RiskPage() {
                             }}>
                                 <Database size={11} />
                                 {state.systems.find(s => s.id === activeProject.systemId)?.name}
+                            </span>
+                        )}
+                        {activeProject.baselinePlatformName && (
+                            <span className="domain-tag" style={{ 
+                                display: 'inline-flex', 
+                                alignItems: 'center', 
+                                gap: '4px',
+                                fontSize: '11px',
+                                padding: '2px 8px',
+                                borderRadius: '4px',
+                                fontWeight: 600,
+                                background: 'rgba(99, 102, 241, 0.1)',
+                                color: '#6366f1',
+                                border: '1px solid rgba(99, 102, 241, 0.25)'
+                            }}>
+                                <Layers size={11} />
+                                Plattform: {activeProject.baselinePlatformName}
                             </span>
                         )}
                     </div>
@@ -476,6 +571,98 @@ export function RiskPage() {
                         <Shield size={14} style={{ color: 'var(--accent-teal)' }} />
                         {t('risk.total_score')}
                     </span>
+                </div>
+            </div>
+
+            {/* Enterprise Baseline Banner */}
+            <div className="card" style={{
+                padding: '12px 18px',
+                marginBottom: '16px',
+                background: 'var(--card-inner-bg)',
+                border: '1px solid var(--border)',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '12px'
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <ShieldCheck size={20} style={{ color: 'var(--accent-teal)', flexShrink: 0 }} />
+                    <div>
+                        <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            Virksomhetens Felles Grunnsikring (Organisatorisk Baseline)
+                            <span style={{ fontSize: '10px', color: 'var(--accent-teal)', fontWeight: 700, padding: '1px 6px', borderRadius: '4px', background: 'rgba(16, 185, 129, 0.1)' }}>
+                                Felles for alle systemer
+                            </span>
+                        </div>
+                        <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                            Overordnede sikkerhetspolicyer, tilgangsstyring, fysisk sikring og hendelseshåndtering ivaretas sentralt i ISMS-et.
+                        </div>
+                    </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <span className="status-badge" style={{ fontSize: '11px', padding: '3px 8px', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-primary)', borderColor: 'rgba(59, 130, 246, 0.25)' }}>
+                        ISO 27001: <strong>{baselineStats.isoPct}%</strong>
+                    </span>
+                    <span className="status-badge" style={{ fontSize: '11px', padding: '3px 8px', background: 'rgba(13, 148, 136, 0.1)', color: '#0d9488', borderColor: 'rgba(13, 148, 136, 0.25)' }}>
+                        NSM Grunnprinsipper: <strong>{baselineStats.nsmPct}%</strong>
+                    </span>
+                    <span className="status-badge" style={{ fontSize: '11px', padding: '3px 8px', background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', borderColor: 'rgba(168, 85, 247, 0.25)' }}>
+                        NIS2: <strong>{baselineStats.nis2Pct}%</strong>
+                    </span>
+                </div>
+            </div>
+
+            {/* Scope Filter Toggles */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+                <div style={{ display: 'inline-flex', gap: '4px', background: 'var(--bg-tertiary)', padding: '3px', borderRadius: '6px', border: '1px solid var(--border)' }}>
+                    <button
+                        onClick={() => setScopeFilter('system_specific')}
+                        style={{
+                            padding: '4px 10px', fontSize: '12px', fontWeight: 600, border: 'none', borderRadius: '4px', cursor: 'pointer',
+                            background: scopeFilter === 'system_specific' ? 'var(--card-bg)' : 'transparent',
+                            color: scopeFilter === 'system_specific' ? 'var(--accent-teal)' : 'var(--text-secondary)',
+                            boxShadow: scopeFilter === 'system_specific' ? 'var(--shadow-sm)' : 'none',
+                            display: 'inline-flex', alignItems: 'center', gap: '5px'
+                        }}
+                    >
+                        <Zap size={13} />
+                        Kun systemspesifikk risiko ({systemSpecificCount})
+                    </button>
+                    <button
+                        onClick={() => setScopeFilter('inherited_platform')}
+                        style={{
+                            padding: '4px 10px', fontSize: '12px', fontWeight: 600, border: 'none', borderRadius: '4px', cursor: 'pointer',
+                            background: scopeFilter === 'inherited_platform' ? 'var(--card-bg)' : 'transparent',
+                            color: scopeFilter === 'inherited_platform' ? '#6366f1' : 'var(--text-secondary)',
+                            boxShadow: scopeFilter === 'inherited_platform' ? 'var(--shadow-sm)' : 'none',
+                            display: 'inline-flex', alignItems: 'center', gap: '5px'
+                        }}
+                    >
+                        <Layers size={13} />
+                        Arvet plattformrisiko ({inheritedPlatformCount})
+                    </button>
+                    <button
+                        onClick={() => setScopeFilter('all')}
+                        style={{
+                            padding: '4px 10px', fontSize: '12px', fontWeight: 600, border: 'none', borderRadius: '4px', cursor: 'pointer',
+                            background: scopeFilter === 'all' ? 'var(--card-bg)' : 'transparent',
+                            color: scopeFilter === 'all' ? 'var(--text-primary)' : 'var(--text-secondary)',
+                            boxShadow: scopeFilter === 'all' ? 'var(--shadow-sm)' : 'none',
+                            display: 'inline-flex', alignItems: 'center', gap: '5px'
+                        }}
+                    >
+                        Samlet løsningsrisiko ({allRisks.length})
+                    </button>
+                </div>
+
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span>Fokus:</span>
+                    <strong style={{ color: 'var(--text-primary)' }}>
+                        {scopeFilter === 'system_specific' && 'Systemspesifikk restrisiko (applikasjonskode, data, API)'}
+                        {scopeFilter === 'inherited_platform' && 'Arvet fra plattform (ivaretatt av underliggende drift)'}
+                        {scopeFilter === 'all' && 'Samlet risikoprofil (både applikasjon og arvet plattform)'}
+                    </strong>
                 </div>
             </div>
 
@@ -793,6 +980,37 @@ export function RiskPage() {
                                                     </td>
                                                     <td style={{ fontWeight: 500, fontSize: '13px' }}>
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                                            {risk.scope === 'inherited_platform' ? (
+                                                                <span
+                                                                    className="status-badge"
+                                                                    style={{
+                                                                        fontSize: '9px',
+                                                                        padding: '1px 5px',
+                                                                        background: 'rgba(99, 102, 241, 0.12)',
+                                                                        color: '#6366f1',
+                                                                        borderColor: 'rgba(99, 102, 241, 0.25)',
+                                                                        fontWeight: 700
+                                                                    }}
+                                                                    title={`Arvet risiko fra: ${risk.inheritedFrom || 'Plattform'}`}
+                                                                >
+                                                                    Arvet plattform
+                                                                </span>
+                                                            ) : (
+                                                                <span
+                                                                    className="status-badge"
+                                                                    style={{
+                                                                        fontSize: '9px',
+                                                                        padding: '1px 5px',
+                                                                        background: 'rgba(16, 185, 129, 0.12)',
+                                                                        color: 'var(--accent-teal)',
+                                                                        borderColor: 'rgba(16, 185, 129, 0.25)',
+                                                                        fontWeight: 700
+                                                                    }}
+                                                                    title="Systemspesifikk risiko for denne applikasjonen"
+                                                                >
+                                                                    Systemspesifikk
+                                                                </span>
+                                                            )}
                                                             <span>{risk.title}</span>
                                                             {risk.jiraIssueKey && (
                                                                 <span
@@ -910,6 +1128,28 @@ export function RiskPage() {
                                                                 flexDirection: 'column',
                                                                 gap: '16px',
                                                             }}>
+                                                                {/* Inherited platform banner if applicable */}
+                                                                {risk.scope === 'inherited_platform' && (
+                                                                    <div style={{
+                                                                        padding: '10px 14px',
+                                                                        background: 'rgba(99, 102, 241, 0.08)',
+                                                                        border: '1px solid rgba(99, 102, 241, 0.2)',
+                                                                        borderRadius: '6px',
+                                                                        fontSize: '12px',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        gap: '10px'
+                                                                    }}>
+                                                                        <Layers size={16} style={{ color: '#6366f1', flexShrink: 0 }} />
+                                                                        <div>
+                                                                            <strong style={{ color: '#6366f1' }}>Arvet fra underliggende plattform ({risk.inheritedFrom || 'Plattform'}):</strong>{' '}
+                                                                            <span style={{ color: 'var(--text-secondary)' }}>
+                                                                                {risk.inheritedMitigationDetails || 'Denne risikoen håndteres og mitigeres av det underliggende plattformteamet / infrastrukturen. Systemeier trenger ikke gjennomføre ytterligere tiltak så lenge plattformens forutsetninger følges.'}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
                                                                 {/* Context information */}
                                                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
                                                                     <div>

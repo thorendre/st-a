@@ -3,6 +3,7 @@ import { useAssessmentStore } from '../hooks/useAssessmentStore';
 import { iso27001Controls, isoDomains } from '../data/iso27001';
 import { doraControls } from '../data/dora';
 import { nis2Controls } from '../data/nis2';
+import { nsmControls } from '../data/nsm';
 import { ismsDocuments } from '../data/ismsDocuments';
 import { useLang } from '../hooks/useLang';
 import { domainTranslations, getControlTranslation } from '../data/translations';
@@ -47,6 +48,7 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
         return tr ? tr.guidance.length : c.guidance.length;
     };
     const isoStats = useMemo(() => computeRegStats(iso27001Controls, state.assessments, isoGuidanceCount), [state.assessments, lang]);
+    const nsmStats = useMemo(() => computeRegStats(nsmControls, state.assessments), [state.assessments]);
     const doraStats = useMemo(() => computeRegStats(doraControls, state.assessments), [state.assessments]);
     const nis2Stats = useMemo(() => computeRegStats(nis2Controls, state.assessments), [state.assessments]);
 
@@ -80,8 +82,9 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
             </div>
 
             {/* Regulation overview row */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '16px' }}>
                 <RegCard label="ISO 27001" stats={isoStats} data={statusPieData(isoStats)} color="var(--accent-primary)" />
+                <RegCard label="NSM Grunnprinsipper" stats={nsmStats} data={statusPieData(nsmStats)} color="#0d9488" />
                 <RegCard label="DORA" stats={doraStats} data={statusPieData(doraStats)} color="var(--accent-teal)" />
                 <RegCard label="NIS2" stats={nis2Stats} data={statusPieData(nis2Stats)} color="var(--accent-burgundy)" />
             </div>
@@ -112,6 +115,7 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
                     <h3 style={sectionLabel}>{t('dash.impl_steps_total')}</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <GuidanceBar label="ISO 27001" done={isoStats.guideDone} total={isoStats.guideTotal} color="var(--accent-primary)" />
+                        <GuidanceBar label="NSM Grunnprinsipper" done={nsmStats.guideDone} total={nsmStats.guideTotal} color="#0d9488" />
                         <GuidanceBar label="DORA" done={doraStats.guideDone} total={doraStats.guideTotal} color="var(--accent-teal)" />
                         <GuidanceBar label="NIS2" done={nis2Stats.guideDone} total={nis2Stats.guideTotal} color="var(--accent-burgundy)" />
                     </div>

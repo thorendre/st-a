@@ -11,6 +11,7 @@ import { useAssessmentStore } from './hooks/useAssessmentStore';
 import { useLang } from './hooks/useLang';
 import { doraControls, doraDomains, doraDomainTranslations } from './data/dora';
 import { nis2Controls, nis2Domains, nis2DomainTranslations } from './data/nis2';
+import { nsmControls, nsmDomains, nsmDomainTranslations } from './data/nsm';
 import {
     Sun, Moon, ShieldCheck, LayoutDashboard,
     ListCheck, Activity, Shield, AlertTriangle,
@@ -34,6 +35,7 @@ interface ModuleMeta {
 const ALL_MODULES: ModuleMeta[] = [
     { id: 'overview', title: 'Oversikt / Dashboard', description: 'Samlet modenhet, målinger og nøkkeltall', icon: LayoutDashboard },
     { id: 'controls', title: 'ISO/IEC 27001', description: '93 sikkerhetskontroller (Vedlegg A)', icon: ListCheck },
+    { id: 'nsm', title: 'NSM Grunnprinsipper', badge: 'NO', description: 'Nasjonalt sikkerhetsorgans grunnprinsipper for IKT-sikkerhet (v2.0)', icon: ShieldCheck },
     { id: 'dora', title: 'DORA', badge: 'EU', description: 'Digital Operational Resilience Act for finans og IKT-leverandører', icon: Activity },
     { id: 'nis2', title: 'NIS2', badge: 'EU', description: 'Cybersikkerhetsdirektivet for samfunnsviktige virksomheter', icon: Shield },
     { id: 'risk', title: 'Risikovurdering & KITA', description: 'KITA/CIA konsekvensvurdering, 5x5 matrise og tiltak', icon: AlertTriangle },
@@ -46,6 +48,7 @@ const ALL_MODULES: ModuleMeta[] = [
 const defaultModuleConfig: ModuleConfig = {
     overview: true,
     controls: true,
+    nsm: true,
     dora: true,
     nis2: true,
     risk: true,
@@ -117,6 +120,7 @@ function App() {
         const all: ModuleConfig = {
             overview: true,
             controls: true,
+            nsm: true,
             dora: true,
             nis2: true,
             risk: true,
@@ -132,6 +136,7 @@ function App() {
         const coreOnly: ModuleConfig = {
             overview: true,
             controls: true,
+            nsm: false,
             dora: false,
             nis2: false,
             risk: true,
@@ -212,6 +217,7 @@ function App() {
                                 <span style={{ flex: 1, textAlign: 'left' }}>
                                     {mod.id === 'overview' && t('nav.overview')}
                                     {mod.id === 'controls' && t('nav.controls')}
+                                    {mod.id === 'nsm' && 'NSM Grunnprinsipper'}
                                     {mod.id === 'dora' && 'DORA'}
                                     {mod.id === 'nis2' && 'NIS2'}
                                     {mod.id === 'risk' && t('nav.risk')}
@@ -292,7 +298,8 @@ function App() {
                 <header className="top-bar">
                     <h2 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>
                         {activeTab === 'overview' && t('nav.overview')}
-                        {activeTab === 'controls' && `${t('nav.controls')} (ISO 27001)`}
+                        {activeTab === 'controls' && t('controls.title')}
+                        {activeTab === 'nsm' && 'NSM Grunnprinsipper v2.0 (Nasjonalt sikkerhetsorgan)'}
                         {activeTab === 'dora' && 'DORA (Digital Operational Resilience Act)'}
                         {activeTab === 'nis2' && 'NIS2 (Network and Information Security Directive)'}
                         {activeTab === 'risk' && t('nav.risk')}
@@ -310,6 +317,14 @@ function App() {
                 <div className="page-container">
                     {activeTab === 'overview' && <Dashboard onNavigateToControls={() => setActiveTab('controls')} />}
                     {activeTab === 'controls' && <ControlsPage />}
+                    {activeTab === 'nsm' && (
+                        <RegulationPage
+                            controls={nsmControls}
+                            domains={nsmDomains}
+                            domainTranslations={nsmDomainTranslations}
+                            regulationLabel="NSM"
+                        />
+                    )}
                     {activeTab === 'dora' && (
                         <RegulationPage
                             controls={doraControls}
