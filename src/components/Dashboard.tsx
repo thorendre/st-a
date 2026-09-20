@@ -75,14 +75,14 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
     return (
         <div className="animate-fade" style={{ width: '100%' }}>
             {/* Actions */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginBottom: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
                 <button onClick={exportData} style={actionBtnStyle}><Download size={14} /> {t('dash.export')}</button>
                 <label style={{ ...actionBtnStyle, cursor: 'pointer' }}><Upload size={14} /> {t('dash.import')}<input type="file" accept=".json" onChange={handleFileUpload} style={{ display: 'none' }} /></label>
                 <button onClick={resetData} style={{ ...actionBtnStyle, borderColor: 'rgba(239,68,68,0.3)', color: 'var(--accent-red)' }}><RotateCcw size={14} /> {t('dash.reset')}</button>
             </div>
 
             {/* Regulation overview row */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '16px' }}>
+            <div className="dashboard-reg-grid">
                 <RegCard label="ISO 27001" stats={isoStats} data={statusPieData(isoStats)} color="var(--accent-primary)" />
                 <RegCard label="NSM Grunnprinsipper" stats={nsmStats} data={statusPieData(nsmStats)} color="#0d9488" />
                 <RegCard label="DORA" stats={doraStats} data={statusPieData(doraStats)} color="var(--accent-teal)" />
@@ -90,11 +90,11 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
             </div>
 
             {/* Bottom row: ISMS docs + guidance steps */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+            <div className="dashboard-two-col-grid">
                 {/* ISMS Documents summary */}
                 <div className="card" style={{ padding: '24px' }}>
                     <h3 style={sectionLabel}>{t('nav.documents')}</h3>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
                         <PieChart
                             data={[
                                 { label: 'Utfylt', value: docStats.docFilled, color: 'var(--accent-teal)' },
@@ -125,7 +125,7 @@ export const Dashboard = ({ onNavigateToControls }: { onNavigateToControls?: () 
             {/* Domain breakdown */}
             <div className="card" style={{ padding: '24px' }}>
                 <h3 style={{ ...sectionLabel, marginBottom: '20px' }}>{t('dash.domain_breakdown')}</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div className="dashboard-two-col-grid" style={{ marginBottom: 0 }}>
                     {domainStats.map(d => {
                         const p = d.total > 0 ? Math.round((d.done / d.total) * 100) : 0;
                         const color = domainColors[d.domain] || 'var(--text-muted)';

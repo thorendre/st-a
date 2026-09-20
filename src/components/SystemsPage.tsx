@@ -185,7 +185,7 @@ export const SystemsPage = () => {
             </div>
 
             {/* Inventory Table */}
-            <div className="card" style={{ overflow: 'hidden' }}>
+            <div className="card table-responsive">
                 <table className="controls-table">
                     <thead>
                         <tr>

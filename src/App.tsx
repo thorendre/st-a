@@ -15,7 +15,7 @@ import { nsmControls, nsmDomains, nsmDomainTranslations } from './data/nsm';
 import {
     Sun, Moon, ShieldCheck, LayoutDashboard,
     ListCheck, Activity, Shield, AlertTriangle,
-    FileText, Info, Database, Fingerprint, Sliders, X, Check, Lock
+    FileText, Info, Database, Fingerprint, Sliders, X, Check, Menu
 } from 'lucide-react';
 import { ModuleId, ModuleConfig } from './types';
 
@@ -79,6 +79,7 @@ function getInitialTheme(): Theme {
 function App() {
     const [moduleConfig, setModuleConfig] = useState<ModuleConfig>(getInitialModuleConfig);
     const [showModuleSettings, setShowModuleSettings] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<Tab>('controls');
     const [theme, setTheme] = useState<Theme>(getInitialTheme);
     const { state, setCompanyName } = useAssessmentStore();
@@ -154,9 +155,18 @@ function App() {
 
     return (
         <div className="sidebar-layout">
+            {/* Mobile Backdrop */}
+            {mobileMenuOpen && (
+                <div 
+                    className="sidebar-backdrop" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    aria-hidden="true"
+                />
+            )}
+
             {/* Sidebar Navigation */}
-            <aside className="sidebar">
-                {/* Brand Logo & Security Trust Seal */}
+            <aside className={`sidebar ${mobileMenuOpen ? 'open' : ''}`}>
+                {/* Brand Logo & Security Seal */}
                 <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <div style={{
@@ -182,6 +192,16 @@ function App() {
                             </span>
                         </div>
                     </div>
+                    {/* Mobile Close Button */}
+                    <button
+                        className="mobile-menu-btn"
+                        onClick={() => setMobileMenuOpen(false)}
+                        title="Lukk meny"
+                        aria-label="Lukk meny"
+                        style={{ border: 'none' }}
+                    >
+                        <X size={18} />
+                    </button>
                 </div>
 
                 {/* Modules Header & Customize Button */}
@@ -211,7 +231,10 @@ function App() {
                             <button
                                 key={mod.id}
                                 className={`sidebar-nav-btn ${isActive ? 'active' : ''}`}
-                                onClick={() => setActiveTab(mod.id)}
+                                onClick={() => {
+                                    setActiveTab(mod.id);
+                                    setMobileMenuOpen(false);
+                                }}
                             >
                                 <Icon size={16} />
                                 <span style={{ flex: 1, textAlign: 'left' }}>
@@ -242,12 +265,6 @@ function App() {
 
                 {/* Sidebar Footer Controls */}
                 <div className="sidebar-footer">
-                    {/* Trust Seal Badge */}
-                    <div className="trust-badge" style={{ justifyContent: 'center', width: '100%', padding: '6px 10px', fontSize: '10px' }}>
-                        <Lock size={12} />
-                        <span>Klientkryptert · WCAG 2.1 AA</span>
-                    </div>
-
                     {/* Organization Input */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         <label style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -296,19 +313,28 @@ function App() {
             <main className="main-content">
                 {/* Header/Top Bar */}
                 <header className="top-bar">
-                    <h2 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>
-                        {activeTab === 'overview' && t('nav.overview')}
-                        {activeTab === 'controls' && t('controls.title')}
-                        {activeTab === 'nsm' && 'NSM Grunnprinsipper v2.0 (Nasjonalt sikkerhetsorgan)'}
-                        {activeTab === 'dora' && 'DORA (Digital Operational Resilience Act)'}
-                        {activeTab === 'nis2' && 'NIS2 (Network and Information Security Directive)'}
-                        {activeTab === 'risk' && t('nav.risk')}
-                        {activeTab === 'systems' && 'Systemoversikt'}
-                        {activeTab === 'privacy' && 'Personvern (DPO-portal)'}
-                        {activeTab === 'documents' && t('nav.documents')}
-                        {activeTab === 'about' && t('nav.about')}
-                    </h2>
-                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 500 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
+                        <button 
+                            className="mobile-menu-btn" 
+                            onClick={() => setMobileMenuOpen(prev => !prev)}
+                            aria-label="Åpne eller lukk meny"
+                        >
+                            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+                        </button>
+                        <h2 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {activeTab === 'overview' && t('nav.overview')}
+                            {activeTab === 'controls' && t('controls.title')}
+                            {activeTab === 'nsm' && 'NSM Grunnprinsipper v2.0'}
+                            {activeTab === 'dora' && 'DORA'}
+                            {activeTab === 'nis2' && 'NIS2'}
+                            {activeTab === 'risk' && t('nav.risk')}
+                            {activeTab === 'systems' && 'Systemoversikt'}
+                            {activeTab === 'privacy' && 'Personvern & DPA'}
+                            {activeTab === 'documents' && t('nav.documents')}
+                            {activeTab === 'about' && t('nav.about')}
+                        </h2>
+                    </div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 500, flexShrink: 0 }}>
                         {state.companyName || 'Ståa Compliance'}
                     </div>
                 </header>

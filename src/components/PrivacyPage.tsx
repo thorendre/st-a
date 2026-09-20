@@ -246,7 +246,7 @@ export const PrivacyPage = () => {
                     </div>
 
                     {/* Privacy Inventory Table */}
-                    <div className="card" style={{ overflow: 'hidden' }}>
+                    <div className="card table-responsive">
                         <table className="controls-table">
                             <thead>
                                 <tr>
@@ -607,7 +607,7 @@ export const PrivacyPage = () => {
                     </div>
 
                     {/* Vendor Table */}
-                    <div className="card" style={{ overflow: 'hidden' }}>
+                    <div className="card table-responsive">
                         <table className="controls-table">
                             <thead>
                                 <tr>

@@ -94,9 +94,9 @@ export const DocumentsPage = () => {
     };
 
     return (
-        <div className="animate-fade" style={{ width: '100%', display: 'flex', gap: '0', height: 'calc(100vh - 180px)', minHeight: '520px' }}>
+        <div className="animate-fade docs-container" style={{ width: '100%', display: 'flex', gap: '0', height: 'calc(100vh - 180px)', minHeight: '520px' }}>
             {/* Sidebar */}
-            <aside className="card" style={{
+            <aside className="card docs-sidebar" style={{
                 width: '280px', minWidth: '280px', display: 'flex', flexDirection: 'column',
                 borderRadius: '8px 0 0 8px', overflow: 'hidden'
             }}>
@@ -180,13 +180,13 @@ export const DocumentsPage = () => {
             </aside>
 
             {/* Main editor */}
-            <main className="card" style={{
+            <main className="card docs-content" style={{
                 flex: 1, borderRadius: '0 8px 8px 0', borderLeft: 'none',
                 overflowY: 'auto', padding: '0'
             }}>
                 {selectedDoc ? (
-                    <div style={{ padding: '32px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+                    <div style={{ padding: 'min(32px, 5vw)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
                             <div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
                                     <span style={{

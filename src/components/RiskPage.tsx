@@ -667,7 +667,7 @@ export function RiskPage() {
             </div>
 
             {/* Stats bar */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px', marginBottom: '20px' }}>
+            <div className="risk-stats-grid">
                 <div className="card" style={{ padding: '14px 16px', textAlign: 'center' }}>
                     <div style={{ fontSize: '20px', fontWeight: 700 }}>{stats.total}</div>
                     <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('risk.total')}</div>
@@ -691,7 +691,7 @@ export function RiskPage() {
             </div>
 
             {/* Main content: sidebar + matrix + table */}
-            <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '16px' }}>
+            <div className="risk-main-grid">
                 {/* Category sidebar */}
                 <div>
                     <div className="card" style={{ padding: '16px' }}>
@@ -795,7 +795,9 @@ export function RiskPage() {
                         <h3 style={{ fontSize: '13px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)', marginBottom: '16px' }}>
                             {t('risk.matrix_title')}
                         </h3>
-                        <div style={{ display: 'flex', gap: '4px' }}>
+                        <div className="matrix-scroll-wrapper">
+                            <div className="matrix-scroll-content">
+                                <div style={{ display: 'flex', gap: '4px' }}>
                             {/* Y-axis label */}
                             <div style={{
                                 writingMode: 'vertical-rl', transform: 'rotate(180deg)',
@@ -901,10 +903,12 @@ export function RiskPage() {
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    {/* Risk Table */}
-                    <div className="card" style={{ overflow: 'hidden' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
+            {/* Risk Table */}
+                    <div className="card table-responsive">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid var(--border)', flexWrap: 'wrap', gap: '8px' }}>
                             <h3 style={{ fontSize: '14px', fontWeight: 600 }}>
                                 {t('risk.risk_list')} ({filteredRisks.length})
                             </h3>
